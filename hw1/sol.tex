@@ -1,0 +1,363 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage[shortlabels]{enumitem}
+\usepackage{tcolorbox}
+
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{thmtools}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xspace}
+\usepackage{CJKutf8}
+\usepackage[hidelinks,pdfencoding=auto,psdextra]{hyperref}
+
+\usepackage{graphicx}
+\usepackage{pythonhighlight}
+
+
+%\renewcommand{\thepage}{}
+
+\textwidth=6.7in
+\textheight=8.4in
+\oddsidemargin=-.3in
+\evensidemargin=-.1in
+\topmargin=-.3in
+
+\newcommand{\Bskip}{\vspace*{.3in}}
+\newcommand{\Solution}{\ \\ \textbf{Solution:} }
+\newcommand{\Answer}{\ \\ \textbf{Answer:} }
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{hint}{Hint}
+
+\DeclareMathOperator*{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathsf{Var}}
+\newcommand{\Cov}{\mathsf{Cov}}
+\declaretheoremstyle[headfont=\bf]{normalhead}
+\declaretheorem[style=normalhead]{problem}
+\def\ie{\textit{i.e.}\xspace}
+\def\eg{\textit{e.g.}\xspace}
+
+\begin{document}
+
+\noindent
+\hspace*{.2in} COMP7102P Fall 2021
+\hfill Homework 1\\
+\begin{CJK}{UTF8}{gbsn}
+\hspace*{.2in} \textcolor{red}{BA21011024 Qianyu Zhang 张钱宇} \hfill due: Oct 7, 09:30
+\end{CJK}
+
+\bigskip
+%When asked to design an algorithm with certain properties, you must prove that these properties hold for your algorithm.
+
+
+
+\begin{problem}[30 points]
+Prove the following claims and show your calculations.
+\begin{enumerate}[(a)]
+\item Prove that $\E[Y] \le \E[Y^2]^\frac{1}{2}$ for any real random variable $Y$. Moreover, show this implies $\E[|X - \E[X]|] \le \sqrt{\Var(X)}$.
+
+\Answer
+\begin{equation}
+\begin{aligned}
+\Var(Y) = \E[(Y - E(Y))^2] = \E[Y^2 - 2Y\E(Y) + \E(Y)^2] = \E(Y^2) - \E(Y)^2, \notag \\
+\end{aligned}
+\end{equation}
+where \ $\Var(Y) \ge 0$, \ \ie,  $\E[Y^2] - \E[Y]^2 \ge 0$.   \\
+Thus, we can prove that $\E[Y] \le \E[Y^2]^\frac{1}{2}$.
+
+Then, according to $\Var(X) = \E[(X - E(X))^2]$, \\
+we can obtain $\sqrt{\Var(X)} = \sqrt{\E[(X - E(X))^2]} = \E[(X - E(X))^2]^\frac{1}{2}$. \\
+Let's assume that $Y = X - E(X)$, and then $\E[X - E(X)] \le \E[(X - E(X))^2]^\frac{1}{2} = \sqrt{\Var(X)}$.
+Thus, the above conclusion implies $\E[X - E(X)] \le \sqrt{\Var(X)}$.
+
+
+\item For $n$ independent variables $X_1, \cdots, X_n$, prove that $\Var(X_1 + X_2 + \cdots + X_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)$.
+
+\Answer
+
+\begin{equation}
+\begin{aligned}
+\Var(X_1 + X_2 + ... + X_n) &= \E[[(X_1 + X_2 + \cdots + X_n) - \E(X_1 + X_2 + \cdots + X_n)]^2] \\
+& = \E[[(X_1 - \E(X_1)) + (X_2 - \E(X_2)) + ... + (X_n - \E(X_n))]^2] \\
+& = \E[\sum_{i=1}^{n}{(X_i - \E(X_i))^2} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{(X_i - \E(X_i))(X_j - \E(X_j))}] \\
+& = \E[\sum_{i=1}^{n}{(X_i - \E(X_i))^2} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{(X_i - \E(X_i))(X_j - \E(X_j))}] \\
+& = \sum_{i=1}^{n}{\E[(X_i - \E(X_i))^2]} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\E[(X_i - \E(X_i))(X_j - \E(X_j))]} \notag \\
+& = \sum_{i=1}^{n}{\Var(X_i)} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\Cov(X_i, X_j)} \notag \\
+\end{aligned}
+\end{equation}
+
+As we know, when $X_1, ..., X_n$ are independent variables, $\Cov(X_i, X_j) = 0$. \\
+Thus, we can prove that $\Var(X_1 + X_2 + \cdots + X_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)$.
+
+
+\item Consider $d$ independent random coins $Z_1, ..., Z_d \in \{\pm 1\}$ where each $Z_i$ is 1 or -1 with probability $1/2$ separately.
+We define $n = 2^d - 1$ random variables as follows: For each non-empty subset $S \subseteq [n]$, we define $X_s = \prod_{i \in S} Z_i$. \\
+For example when $d = 3$, there are 7 random variables $X_1 = Z_1, X_2 = Z_2, X_3 = Z_3, X_{1,2} = Z_1 \cdot Z_2, X_{1,3} = Z_1 \cdot Z_3, X_{2,3} = Z_2 \cdot Z_3$
+and $X_{1,2,3} = Z_1 \cdot Z_2 \cdot Z_3$. \\
+Calculate $\Var(\sum_{S}X_S)$ and compare this with part (b).
+
+\Answer
+
+For $\forall i \in \{1, 2, \cdots, d\}, \E[Z_i] = 1 \times \frac{1}{2} + (-1) \times \frac{1}{2} = 0, \E[Z_i^2] = 1^2 \times \frac{1}{2} + (-1)^2 \times \frac{1}{2} = 1$, \\
+For $\forall i \in S, S \subseteq [n]$, each coin $Z_i$ is independent, then we can calculate $\E[X_S]$ and $\E[X_S^2]$:
+\begin{gather*}
+\E[X_S] = \E[\prod_{i \in S}Z_i] = \prod_{i \in S}\E[Z_i] = 0 \notag \\
+\E[X_S^2] = \E[\prod_{i \in S}Z_i^2] = \prod_{i \in S}\E[Z_i^2] = 1 \notag \\
+\end{gather*}
+Thus, we can calculate $\Var(\sum_{S}X_S)$ as follows:
+\begin{equation}
+\begin{aligned}
+\Var(\sum_{S}X_S) &= \Var(X_1 + X_2 + \cdots + X_n) \notag \\
+&= \E[(X_1 + X_2 + \cdots + X_n)^2] - \E[X_1 + X_2 + \cdots + X_n]^2 \\
+&= \sum_{i=1}^n\E[X_i^2] + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\E[X_iX_j] - \sum_{i=1}^n\E[X_i]^2 - 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\E[X_i]\E[X_j] \\
+&= n + 0 - 0 - 0 \\
+&= n
+\end{aligned}
+\end{equation}
+
+In addition, we can calculate $\sum_{S}\Var(X_S)$ as follows:
+\begin{equation}
+\begin{aligned}
+\sum_{S}\Var(X_S) &= \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n) \notag \\
+&= (\E[X_1] - \E[X_1]^2) + (\E[X_2] - \E[X_2]^2) + \cdots + (\E[X_n] - \E[X_n]^2) \\
+&= (1 - 0) + (1 - 0) + \cdots + (1 - 0) \\
+&= n
+\end{aligned}
+\end{equation}
+
+Obviously, the above results are consistent with the results in problem I(b).
+
+\end{enumerate}
+\end{problem}
+
+
+
+~\\
+\begin{problem}[20 points.] Consider a random distribution $D$ over those bins $[n] = \{1, 2, ..., n\}$. We define its collision probability to be
+\begin{equation}
+\begin{aligned}
+\mathbf{Pr}_{a \sim D, b \sim D}{[a = b]} \notag
+\end{aligned}
+\end{equation}
+where $a$ and $b$ are drawn from D independently.  \\
+Prove that the uniform distribution has the smallest collision probability among all distributions.
+This is the reason why we only consider uniform distribution over n bins in hash functions.
+
+\begin{hint}
+Define a random variable $X$ (depends on $D$) such that the collision probability is equal.
+\end{hint}
+
+\Answer
+First, we define a random variable $X$ with the random distribution $D$, \ie, $P(X = i) = \frac{1}{n}$, $\forall i \in \{1, 2, ..., n\}$. 
+
+Second, we define a random variable $Y = \{Y_1, Y_2, \cdots, Y_n\}$ with the distribution $Y$, we assume that $P(Y = i) = p_i$, and we can obtain $\sum_{i=1}^{n}p_i = 1$.
+
+We define the collision probability of $Y$ as $\sum_{i=1}^{n}p_i^2$, which means the probability that two variables drawn independently from $Y$ are the same.
+
+According to the \textit{Average Inequality}: $\sqrt{\frac{\sum_{i=1}^{n}x_i^2}{n}} \ge \frac{\sum_{i=1}^{n}x_i}{n}$,
+we have $\sum_{i=1}^{n}p_i^2 \ge n \cdot (\frac{\sum_{i=1}^{n}p_i}{n})^2 = n \cdot (\frac{1}{n})^2 = \frac{1}{n}$.
+Only when $p_i = \frac{1}{n}$, $\sum_{i=1}^{n}p_i^2$ can achieve the minimum value $\frac{1}{n}$,
+so that the collision probability of $Y$ (\ie, $\sum_{i=1}^{n}p_i^2$) achieves the minimum value $\frac{1}{n}$.
+
+We can also calculate the $l_2$ distance of distribution $Y$ and $D$ to further prove the conclusion of the above minimum value:
+\begin{equation}
+\begin{aligned}
+||Y - D||_2 &= \sqrt{\sum_{i=1}^{n}(p_i - \frac{1}{n})^2} \notag \\
+&= \sqrt{\sum_{i=1}^{n}{(p_i^2 - \frac{2p_i}{n} + \frac{1}{n^2})}} \\
+&= \sqrt{\sum_{i=1}^{n}p_i^2 - \frac{2}{n}\sum_{i=1}^{n}p_i + \sum_{i=1}^{n}\frac{1}{n^2}} \\
+&= \sqrt{\sum_{i=1}^{n}p_i^2 - \frac{2}{n} + \frac{1}{n}} \\
+&= \sqrt{\sum_{i=1}^{n}p_i^2 - \frac{1}{n}} \\
+\end{aligned}
+\end{equation}
+
+Because $||Y - D||_2 \ge 0 \Rightarrow \sum_{i=1}^{n}p_i^2 \ge \frac{1}{n}$, with equality holds only when $p_i = \frac{1}{n}$. 
+
+Finally, we prove that the uniform distribution has the smallest possible collision probability over all distributions.
+\end{problem}
+
+
+
+\begin{problem}[Birthday paradox 10 points.]
+Suppose everybody's birthday is a uniform random number in $\{1, 2, \cdots, 365\}$ independently.
+Now we wanna ask $m$ persons' birthday such that with probability more than $\frac{1}{2}$, two of them will have the same birthday. \\
+\hspace*{.2in} Show the best estimation of $m$.
+
+\begin{hint}
+Think of this as balls into bins with $n = 365$ bins.
+\end{hint}
+
+\Answer
+
+We transform the problem to at most how many persons do not have the same birthday with a probability of no more than $\frac{1}{2}$ ?
+The probability is as follows:
+\begin{equation}
+\begin{aligned}
+\mathbf{Pr}[\forall i \neq j, b_i \neq b_j] = (1 - \frac{1}{n})(1 - \frac{2}{n}) \cdots (1 - \frac{m - 1}{n}) \le \frac{1}{2} \notag
+\end{aligned}
+\end{equation}
+
+According to \textit{Taylor Formula}, the polynomial expansion of exponential function is as follows:
+
+\begin{equation}
+\begin{aligned}
+\exp(x) = \sum_{k=0}^{+\infty} \frac{x^k}{k!} = 1 + x + \frac{x^2}{2} + \frac{x^3}{6} + \frac{x^4}{24} + \cdots \notag
+\end{aligned}
+\end{equation}
+
+When $x \ge 0$, $1 + x \le e^x$, and we replace it in the above equation:
+\begin{equation}
+\begin{aligned}
+\mathbf{Pr}[\forall i \neq j, b_i \neq b_j] &= (1 - \frac{1}{n})(1 - \frac{2}{n}) \cdots (1 - \frac{m - 1}{n}) \\ \notag
+& \le e^{-\frac{1}{n}}e^{-\frac{2}{n}} \cdots e^{-\frac{m-1}{n}} \\
+& = e^{-\frac{1}{n}-\frac{1}{n} \cdots -\frac{1}{n}} \\
+& = e^{-\frac{m(m-1)}{2n}} \le \frac{1}{2}
+\end{aligned}
+\end{equation}
+
+Thus, we have:
+\begin{gather*}
+e^{-\frac{m(m-1)}{2n}} \le \frac{1}{2}, \\ \notag
+-\frac{m(m-1)}{2n} \le -ln2, \\
+m(m - 1) - 2n ln 2 \ge 0, \\
+m^2 - m - 2n ln 2 \ge 0, \\
+m \ge \frac{1 + \sqrt{1 + 8n ln2}}{2} \approx 23.\\
+\end{gather*}
+
+When $n = 365$, we can obtain the best estimation of $m$ is 23.
+\end{problem}
+
+
+
+~\\
+\begin{problem}
+Consider the following game between Alice and Bob: \\
+1. At the beginning of the game, Alice record a secret binary string $z \in \{0, 1\}^n$ of length $n$. \\
+2. Bob guesses m strings $w_1, w_2, \cdots, w_m$ of length $n$ and sends these to Alice. \\
+3. We define the agreement of two strings $x$ and $y$ to be the number of the same entries in $x$ and $y$.
+Then Alice announce Bob's score as the largest agreement between $z$ and one string of $w_1, w_2, \cdots, w_m$. In another word, Bob has a score
+\begin{equation}
+\begin{aligned}
+\max_{i \in [m]}{\{\sum_{j=1}^n{1\{z(j) = w_i(j)\}}\}} \notag
+\end{aligned}
+\end{equation}
+Please design a strategy for Bob such that he could score as high as possible.
+
+\begin{enumerate}[(a)]
+\item (5 points) When $m = 2^n$, come up with a strategy to score $n$.
+
+\Answer
+For a '0-1' variable string with the length of $n$, there are $2^n$ possibilities, just satisfying $m = 2^n$. Thus, Bob can directly enumerate the $2^n$ kinds of string $z$.
+
+Bob can use a simple scheme, that is, converting decimal numbers $0-2^n$ into binary strings in turn (if the length is less than $n$, use '0' to fill in).
+
+We show a Python code example, where $n = 4$ and $m = 2^4 = 16$:
+
+\begin{python}
+>>> n = 4
+>>> [bin(i)[2:].zfill(n) for i in range(pow(2, n))]
+['0000', '0001', '0010', '0011', '0100', '0101', '0110', '0111', '1000',
+'1001', '1010', '1011', '1100', '1101', '1110', '1111']
+\end{python}
+
+
+\item (5 points) When $m = 2$, come up with a strategy to score at least $\frac{n}{2}$.
+
+\Answer
+Bob can construct a string with length $n$ that is all composed of 0, \ie, $w_1$ = '000...000', and a string that is all composed of 1, \ie, $w_2$ = '111...111'.
+
+Assume that if Alice records the binary string with $x$ '0' and $y$ '1', and $x + y = n$. \\
+Case 1, if $x = y = \frac{n}{2}$, $score = \frac{n}{2}$; \\
+Case 2, if $x > y$, $score = \sum_{j=1}^{n}{1\{z(j) = w_1(j)\}} = x > \frac{n}{2}$; \\
+Case 3, if $x < y$, $score = \sum_{j=1}^{n}{1\{z(j) = w_2(j)\}} = y > \frac{n}{2}$. \\
+In summary, the score of the above strategy is at least $\frac{n}{2}$.
+
+
+\item (Optional with 20 bonus points) Let us prove the following strategy of 2 guesses can score $\frac{n}{2} + 0.1 \cdot \sqrt{n}$ with probability at least 0.5:
+Bob sends a random string $w$ and its flip (on every coordinate) $\overline w$ to Alice.
+
+\begin{hint}
+omitted
+\end{hint}
+
+\Answer
+First, Say the agreement between $w$ and $z$ is $X$. 
+Since each coordinate of $w$ and $\overline w$ takes the opposite value, it is obvious that $X_i = \{0, 1\}, \forall i \in [n]$. 
+In addition, $P(X_i = 0) = P(X_i = 1) = \frac{1}{2}$, $\E(X_i) = \frac{1}{2}$.
+Thus, we have $\E[X] = \sum_{i=1}^{n}\E[X_i] = \frac{n}{2}$.
+
+Then, we calculate $\Var(X)$. $\Var(X_i) = \E[(X_i - \E[X_i])^2] = \frac{1}{2} \cdot [(0 - \frac{1}{2})^2 + (1 - \frac{1}{2})^2] = \frac{1}{4}$.
+As $X_i$ is independent with each other, according to the conclusion in Problem I(b), we have $\Var(X) = \sum_{i=1}^{n}\Var(X_i) = \frac{n}{4}$.
+
+On the one hand, according to the conclusion in Problem I(a), we have $\E[|X - \E[X]|] \le \sqrt{\Var(X)} = \frac{\sqrt{n}}{2} = \Theta(\sqrt{n})$.
+
+On the other hand, according to \textit{Chevyshev's inequality}, we have $\mathbf{Pr}[|X - \E[X]| \ge \sqrt{n}] \le \frac{\frac{n}{4}}{(\sqrt{n})^2} = \frac{1}{4}$, 
+\ie, $\mathbf{Pr}[|X - \E[X]| \le \sqrt{n}] \ge 1 - \frac{1}{4} = \frac{3}{4}$.
+
+Formally, suppose the probabilities that the score $X$ around $\frac{n}{2}$ are the same, which is the uniform distribution:
+\begin{equation}
+\begin{aligned}
+\mathbf{Pr}[X = \frac{n}{2} - \sqrt{n}] = \mathbf{Pr}[X = \frac{n}{2} - \sqrt{n} + 1] = \cdots = \mathbf{Pr}[X = \frac{n}{2}] = \cdots = \mathbf{Pr}[X = \frac{n}{2} + \sqrt{n}] \notag
+\end{aligned}
+\end{equation}
+
+Thus, we have:
+\begin{equation}
+\begin{aligned}
+\mathbf{Pr}[|X - \E[X]| \ge 0.1\sqrt{n}] &> \mathbf{Pr}[0.1\sqrt{n} \le |X - \E[X]| \le \sqrt{n}] \\ \notag
+&= \mathbf{Pr}[0.1\sqrt{n} \le |X - \E[X]|] \cdot \mathbf{Pr}[|X - \E[X]| \le \sqrt{n}] \\
+&= \frac{1-0.1}{1} \cdot \frac{3}{4} > \frac{1}{2}
+\end{aligned}
+\end{equation}
+
+Finally, we prove that the above strategy of 2 guesses can score $\frac{n}{2} + 0.1 \cdot \sqrt{n}$ with probability at least 0.5.
+\end{enumerate}
+\end{problem}
+
+
+
+~\\
+~\\
+~\\
+~\\
+\begin{problem}[20 points]
+Consider the following generalization of Power of 2 choices to $d > 2$ choices: \\
+1. Prepare $d$ perfectly random hash functions $h_1, \cdots, h_d : U -> [n]$. \\
+2. For each ball $A$, allocate it into the bin among his $d$ choices $\{h_1(A), \cdots, h_d(A)\}$ with the lightest load at this moment. \\
+
+Suppose we are throwing $n$ balls into $n$ bins. Modify the proof sketch in lecture 2 to show that: With probability $1 - n^{-2}$, 
+the max-load is $\log_d{\log n} + O(1)$ instead of $\log_2{\log n} + O(1)$
+
+\Answer
+
+Base case: $m_3 \le \frac{n}{3}$;
+
+According to \textit{Chernoff bounds},
+
+Bounding $m_4$: since $\E[m_4] \le \frac{n}{3^d}$, it implies $m_4 \le 1.1 \cdot \frac{n}{3^d}$ w.h.p;
+
+Then, we can obtain:
+
+Bounding $m_5$: $m_5 \le 1.1n \cdot (\frac{m_4}{n})^d = 1.1^{d+1} \cdot \frac{n}{3^{d^2}}$;
+
+$\cdots$
+
+Bounding $m_l$: $m_l \le 1.1^{d^{l-3}-1} \cdot \frac{n}{3^{d^{l-3}}} \le \frac{n}{2^{d^{l-3}}}$.
+
+We take logarithms on both sides of the equation:
+\begin{equation}
+\begin{aligned}
+& \frac{n}{2^{d^{l-3}}} \le 1\\ \notag
+\Rightarrow & n \le 2^{d^{l-3}} \\
+\Rightarrow & \log_2 n \le d^{l-3} \\
+\Rightarrow & \log_d{\log_2 n} \le l-3
+\end{aligned}
+\end{equation}
+
+Finally, we can prove that with probability $1 - n^{-2}$, the max-load is $\log_d{\log n} + O(1)$.
+\end{problem}
+
+\end{document}
