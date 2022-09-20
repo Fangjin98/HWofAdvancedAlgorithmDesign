@@ -1,59 +1,16 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath}
-\usepackage[shortlabels]{enumitem}
-\usepackage{tcolorbox}
-
-\usepackage{graphicx}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{thmtools}
-\usepackage{amsthm}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-\usepackage{xspace}
-\usepackage{CJKutf8}
-\usepackage[hidelinks,pdfencoding=auto,psdextra]{hyperref}
-
-\usepackage{graphicx}
-\usepackage{pythonhighlight}
-
-
-%\renewcommand{\thepage}{}
-
-\textwidth=6.7in
-\textheight=8.4in
-\oddsidemargin=-.3in
-\evensidemargin=-.1in
-\topmargin=-.3in
-
-\newcommand{\Bskip}{\vspace*{.3in}}
-\newcommand{\Solution}{\ \\ \textbf{Solution:} }
-\newcommand{\Answer}{\ \\ \textbf{Answer:} }
-\newtheorem{theorem}{Theorem}
-\newtheorem{remark}{Remark}
-\newtheorem{hint}{Hint}
-
-\DeclareMathOperator*{\E}{\mathbb{E}}
-\newcommand{\Var}{\mathsf{Var}}
-\newcommand{\Cov}{\mathsf{Cov}}
-\declaretheoremstyle[headfont=\bf]{normalhead}
-\declaretheorem[style=normalhead]{problem}
-\def\ie{\textit{i.e.}\xspace}
-\def\eg{\textit{e.g.}\xspace}
+\include{../header.tex}
 
 \begin{document}
 
 \noindent
-\hspace*{.2in} COMP7102P Fall 2021
+\hspace*{.2in} COMP7102P Fall 2022
 \hfill Homework 1\\
 \begin{CJK}{UTF8}{gbsn}
-\hspace*{.2in} \textcolor{red}{BA21011024 Qianyu Zhang 张钱宇} \hfill due: Oct 7, 09:30
+\hspace*{.2in} \textcolor{red}{BA22011024 Jing Fang 方缙} \hfill due: Sept 22, 09:30
 \end{CJK}
 
 \bigskip
 %When asked to design an algorithm with certain properties, you must prove that these properties hold for your algorithm.
-
-
 
 \begin{problem}[30 points]
 Prove the following claims and show your calculations.
@@ -134,9 +91,8 @@ Obviously, the above results are consistent with the results in problem I(b).
 \end{enumerate}
 \end{problem}
 
-
-
 ~\\
+
 \begin{problem}[20 points.] Consider a random distribution $D$ over those bins $[n] = \{1, 2, ..., n\}$. We define its collision probability to be
 \begin{equation}
 \begin{aligned}
@@ -178,7 +134,6 @@ Because $||Y - D||_2 \ge 0 \Rightarrow \sum_{i=1}^{n}p_i^2 \ge \frac{1}{n}$, wit
 
 Finally, we prove that the uniform distribution has the smallest possible collision probability over all distributions.
 \end{problem}
-
 
 
 \begin{problem}[Birthday paradox 10 points.]
@@ -230,99 +185,28 @@ m \ge \frac{1 + \sqrt{1 + 8n ln2}}{2} \approx 23.\\
 When $n = 365$, we can obtain the best estimation of $m$ is 23.
 \end{problem}
 
-
-
 ~\\
-\begin{problem}
-Consider the following game between Alice and Bob: \\
-1. At the beginning of the game, Alice record a secret binary string $z \in \{0, 1\}^n$ of length $n$. \\
-2. Bob guesses m strings $w_1, w_2, \cdots, w_m$ of length $n$ and sends these to Alice. \\
-3. We define the agreement of two strings $x$ and $y$ to be the number of the same entries in $x$ and $y$.
-Then Alice announce Bob's score as the largest agreement between $z$ and one string of $w_1, w_2, \cdots, w_m$. In another word, Bob has a score
-\begin{equation}
-\begin{aligned}
-\max_{i \in [m]}{\{\sum_{j=1}^n{1\{z(j) = w_i(j)\}}\}} \notag
-\end{aligned}
-\end{equation}
-Please design a strategy for Bob such that he could score as high as possible.
+\begin{problem}[20 points.]
+Let us finish the calculation about variance left in lecture 1. Consider the simple hash scheme: for a perfectly random hash $h$, we throw ball $1$, . . . , $n$ into $h(1)$, . . . , $h(n)$ directly. Fix a load $k$ and consider the indicator variable $Z_i$ that denotes whether bin $i$ has $k$ balls or not.
 
 \begin{enumerate}[(a)]
-\item (5 points) When $m = 2^n$, come up with a strategy to score $n$.
+\item Prove that $|\Covar(Z_i,Z_j)|=O(1/n)$ for any constant $k$.
 
 \Answer
-For a '0-1' variable string with the length of $n$, there are $2^n$ possibilities, just satisfying $m = 2^n$. Thus, Bob can directly enumerate the $2^n$ kinds of string $z$.
 
-Bob can use a simple scheme, that is, converting decimal numbers $0-2^n$ into binary strings in turn (if the length is less than $n$, use '0' to fill in).
-
-We show a Python code example, where $n = 4$ and $m = 2^4 = 16$:
-
-\begin{python}
->>> n = 4
->>> [bin(i)[2:].zfill(n) for i in range(pow(2, n))]
-['0000', '0001', '0010', '0011', '0100', '0101', '0110', '0111', '1000',
-'1001', '1010', '1011', '1100', '1101', '1110', '1111']
-\end{python}
-
-
-\item (5 points) When $m = 2$, come up with a strategy to score at least $\frac{n}{2}$.
+\item Show that $ \Var (Z_1 + \dots+Z_n)=O(n)$.
 
 \Answer
-Bob can construct a string with length $n$ that is all composed of 0, \ie, $w_1$ = '000...000', and a string that is all composed of 1, \ie, $w_2$ = '111...111'.
 
-Assume that if Alice records the binary string with $x$ '0' and $y$ '1', and $x + y = n$. \\
-Case 1, if $x = y = \frac{n}{2}$, $score = \frac{n}{2}$; \\
-Case 2, if $x > y$, $score = \sum_{j=1}^{n}{1\{z(j) = w_1(j)\}} = x > \frac{n}{2}$; \\
-Case 3, if $x < y$, $score = \sum_{j=1}^{n}{1\{z(j) = w_2(j)\}} = y > \frac{n}{2}$. \\
-In summary, the score of the above strategy is at least $\frac{n}{2}$.
-
-
-\item (Optional with 20 bonus points) Let us prove the following strategy of 2 guesses can score $\frac{n}{2} + 0.1 \cdot \sqrt{n}$ with probability at least 0.5:
-Bob sends a random string $w$ and its flip (on every coordinate) $\overline w$ to Alice.
-
-\begin{hint}
-omitted
-\end{hint}
+\item Apply the Chebyshev's inequality to conclude that with prob $1-n^{-1/2}$, the number of bins with exact $k$ balls is $\frac{n}{k! \cdot e } ± O(n^{0.75})$.
 
 \Answer
-First, Say the agreement between $w$ and $z$ is $X$. 
-Since each coordinate of $w$ and $\overline w$ takes the opposite value, it is obvious that $X_i = \{0, 1\}, \forall i \in [n]$. 
-In addition, $P(X_i = 0) = P(X_i = 1) = \frac{1}{2}$, $\E(X_i) = \frac{1}{2}$.
-Thus, we have $\E[X] = \sum_{i=1}^{n}\E[X_i] = \frac{n}{2}$.
 
-Then, we calculate $\Var(X)$. $\Var(X_i) = \E[(X_i - \E[X_i])^2] = \frac{1}{2} \cdot [(0 - \frac{1}{2})^2 + (1 - \frac{1}{2})^2] = \frac{1}{4}$.
-As $X_i$ is independent with each other, according to the conclusion in Problem I(b), we have $\Var(X) = \sum_{i=1}^{n}\Var(X_i) = \frac{n}{4}$.
-
-On the one hand, according to the conclusion in Problem I(a), we have $\E[|X - \E[X]|] \le \sqrt{\Var(X)} = \frac{\sqrt{n}}{2} = \Theta(\sqrt{n})$.
-
-On the other hand, according to \textit{Chevyshev's inequality}, we have $\mathbf{Pr}[|X - \E[X]| \ge \sqrt{n}] \le \frac{\frac{n}{4}}{(\sqrt{n})^2} = \frac{1}{4}$, 
-\ie, $\mathbf{Pr}[|X - \E[X]| \le \sqrt{n}] \ge 1 - \frac{1}{4} = \frac{3}{4}$.
-
-Formally, suppose the probabilities that the score $X$ around $\frac{n}{2}$ are the same, which is the uniform distribution:
-\begin{equation}
-\begin{aligned}
-\mathbf{Pr}[X = \frac{n}{2} - \sqrt{n}] = \mathbf{Pr}[X = \frac{n}{2} - \sqrt{n} + 1] = \cdots = \mathbf{Pr}[X = \frac{n}{2}] = \cdots = \mathbf{Pr}[X = \frac{n}{2} + \sqrt{n}] \notag
-\end{aligned}
-\end{equation}
-
-Thus, we have:
-\begin{equation}
-\begin{aligned}
-\mathbf{Pr}[|X - \E[X]| \ge 0.1\sqrt{n}] &> \mathbf{Pr}[0.1\sqrt{n} \le |X - \E[X]| \le \sqrt{n}] \\ \notag
-&= \mathbf{Pr}[0.1\sqrt{n} \le |X - \E[X]|] \cdot \mathbf{Pr}[|X - \E[X]| \le \sqrt{n}] \\
-&= \frac{1-0.1}{1} \cdot \frac{3}{4} > \frac{1}{2}
-\end{aligned}
-\end{equation}
-
-Finally, we prove that the above strategy of 2 guesses can score $\frac{n}{2} + 0.1 \cdot \sqrt{n}$ with probability at least 0.5.
 \end{enumerate}
 \end{problem}
 
+~\\
 
-
-~\\
-~\\
-~\\
-~\\
 \begin{problem}[20 points]
 Consider the following generalization of Power of 2 choices to $d > 2$ choices: \\
 1. Prepare $d$ perfectly random hash functions $h_1, \cdots, h_d : U -> [n]$. \\
