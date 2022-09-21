@@ -18,75 +18,77 @@ Prove the following claims and show your calculations.
 \item Prove that $\E[Y] \le \E[Y^2]^\frac{1}{2}$ for any real random variable $Y$. Moreover, show this implies $\E[|X - \E[X]|] \le \sqrt{\Var(X)}$.
 
 \Answer
-\begin{equation}
-\begin{aligned}
-\Var(Y) = \E[(Y - E(Y))^2] = \E[Y^2 - 2Y\E(Y) + \E(Y)^2] = \E(Y^2) - \E(Y)^2, \notag \\
-\end{aligned}
-\end{equation}
-where \ $\Var(Y) \ge 0$, \ \ie,  $\E[Y^2] - \E[Y]^2 \ge 0$.   \\
-Thus, we can prove that $\E[Y] \le \E[Y^2]^\frac{1}{2}$.
+\begin{definition}[The variance of a real random variable $Y$]
+    \begin{align}\label{eq:var}
+        \Var(Y) = \E[(Y - E(Y))^2] = \E[Y^2 - 2Y\E(Y) + \E(Y)^2] = \E(Y^2) - \E(Y)^2
+    \end{align}
+    where $\Var(Y) \ge 0$.
+\end{definition}
 
-Then, according to $\Var(X) = \E[(X - E(X))^2]$, \\
-we can obtain $\sqrt{\Var(X)} = \sqrt{\E[(X - E(X))^2]} = \E[(X - E(X))^2]^\frac{1}{2}$. \\
-Let's assume that $Y = X - E(X)$, and then $\E[X - E(X)] \le \E[(X - E(X))^2]^\frac{1}{2} = \sqrt{\Var(X)}$.
-Thus, the above conclusion implies $\E[X - E(X)] \le \sqrt{\Var(X)}$.
+According to definition 1, we have  $\E[Y^2] \ge \E[Y]^2$. By taking the square root of both sides, we have 
+\begin{align}\label{eq:var1}
+    \E[Y] \le \E[Y^2]^\frac{1}{2}
+\end{align}
 
+By taking the square root of Eq. \eqref{eq:var} and replace $Y$ with $X$, we can obtain $\sqrt{\Var(X)} = \sqrt{\E[(X - E(X))^2]} = \E[(X - E(X))^2]^\frac{1}{2}$. According to Eq. \eqref{eq:var1}, we have $\E[X - E(X)] \le \E[(X - E(X))^2]^\frac{1}{2} = \sqrt{\Var(X)}$, which is consistent with the conclusion of problem (a).
 
 \item For $n$ independent variables $X_1, \cdots, X_n$, prove that $\Var(X_1 + X_2 + \cdots + X_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)$.
 
 \Answer
 
-\begin{equation}
-\begin{aligned}
-\Var(X_1 + X_2 + ... + X_n) &= \E[[(X_1 + X_2 + \cdots + X_n) - \E(X_1 + X_2 + \cdots + X_n)]^2] \\
-& = \E[[(X_1 - \E(X_1)) + (X_2 - \E(X_2)) + ... + (X_n - \E(X_n))]^2] \\
-& = \E[\sum_{i=1}^{n}{(X_i - \E(X_i))^2} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{(X_i - \E(X_i))(X_j - \E(X_j))}] \\
-& = \E[\sum_{i=1}^{n}{(X_i - \E(X_i))^2} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{(X_i - \E(X_i))(X_j - \E(X_j))}] \\
-& = \sum_{i=1}^{n}{\E[(X_i - \E(X_i))^2]} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\E[(X_i - \E(X_i))(X_j - \E(X_j))]} \notag \\
-& = \sum_{i=1}^{n}{\Var(X_i)} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\Cov(X_i, X_j)} \notag \\
-\end{aligned}
-\end{equation}
+Given the definition of variance, we have
+\begin{align} \label{eq:1-b}
+\notag \Var(X_1 + X_2 + ... + X_n) &= \E[[(X_1 + X_2 + \cdots + X_n) - \E(X_1 + X_2 + \cdots + X_n)]^2]\\
+\notag & = \E[[(X_1 - \E(X_1)) + (X_2 - \E(X_2)) + ... + (X_n - \E(X_n))]^2] \\
+\notag & = \E[\sum_{i=1}^{n}{(X_i - \E(X_i))^2} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{(X_i - \E(X_i))(X_j - \E(X_j))}] \\
+\notag & = \sum_{i=1}^{n}{\E[(X_i - \E(X_i))^2]} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\E[(X_i - \E(X_i))(X_j - \E(X_j))]} \notag \\
+& = \sum_{i=1}^{n}{\Var(X_i)} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\Cov(X_i, X_j)}
+\end{align}
 
-As we know, when $X_1, ..., X_n$ are independent variables, $\Cov(X_i, X_j) = 0$. \\
-Thus, we can prove that $\Var(X_1 + X_2 + \cdots + X_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)$.
+Note that, $X_1, ..., X_n$ are independent variables, we have $\Cov(X_i, X_j) = 0$. As a result, we can obtain $\Var(X_1 + X_2 + \cdots + X_n) = \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n)$.
 
 
-\item Consider $d$ independent random coins $Z_1, ..., Z_d \in \{\pm 1\}$ where each $Z_i$ is 1 or -1 with probability $1/2$ separately.
-We define $n = 2^d - 1$ random variables as follows: For each non-empty subset $S \subseteq [n]$, we define $X_s = \prod_{i \in S} Z_i$. \\
+\item Consider $d$ independent random coins $Z_1, ..., Z_d \in \{\pm 1\}$ where each $Z_i$ is 1 or -1 with probability $1/2$ separately. We define $n = 2^d - 1$ random variables as follows: 
+For each non-empty subset $S \subseteq [n]$, we define $X_s = \prod_{i \in S} Z_i$. 
+
 For example when $d = 3$, there are 7 random variables $X_1 = Z_1, X_2 = Z_2, X_3 = Z_3, X_{1,2} = Z_1 \cdot Z_2, X_{1,3} = Z_1 \cdot Z_3, X_{2,3} = Z_2 \cdot Z_3$
-and $X_{1,2,3} = Z_1 \cdot Z_2 \cdot Z_3$. \\
+and $X_{1,2,3} = Z_1 \cdot Z_2 \cdot Z_3$. 
+
 Calculate $\Var(\sum_{S}X_S)$ and compare this with part (b).
 
 \Answer
 
-For $\forall i \in \{1, 2, \cdots, d\}, \E[Z_i] = 1 \times \frac{1}{2} + (-1) \times \frac{1}{2} = 0, \E[Z_i^2] = 1^2 \times \frac{1}{2} + (-1)^2 \times \frac{1}{2} = 1$, \\
-For $\forall i \in S, S \subseteq [n]$, each coin $Z_i$ is independent, then we can calculate $\E[X_S]$ and $\E[X_S^2]$:
-\begin{gather*}
-\E[X_S] = \E[\prod_{i \in S}Z_i] = \prod_{i \in S}\E[Z_i] = 0 \notag \\
-\E[X_S^2] = \E[\prod_{i \in S}Z_i^2] = \prod_{i \in S}\E[Z_i^2] = 1 \notag \\
-\end{gather*}
-Thus, we can calculate $\Var(\sum_{S}X_S)$ as follows:
-\begin{equation}
-\begin{aligned}
+For each coin $Z_i$, we have $\E[Z_i] = 1 \times \frac{1}{2} + (-1) \times \frac{1}{2} = 0$ and $\E[Z_i^2] = 1^2 \times \frac{1}{2} + (-1)^2 \times \frac{1}{2} = 1$.
+
+Since each coin is independent, we have 
+\begin{equation} \label{eq:1-3-1}
+    \E[X_S] = \E[\prod_{i \in S}Z_i] = \prod_{i \in S}\E[Z_i] = 0
+\end{equation}
+
+\begin{equation} \label{eq:1-3-2}
+    \E[X_S^2] = \E[\prod_{i \in S}Z_i^2] = \prod_{i \in S}\E[Z_i^2] = 1
+\end{equation}
+
+Combining Eq. \eqref{eq:1-3-1} and Eq. \eqref{eq:1-3-2}, we have
+
+\begin{align} \label{eq:1-3-3}
 \Var(\sum_{S}X_S) &= \Var(X_1 + X_2 + \cdots + X_n) \notag \\
-&= \E[(X_1 + X_2 + \cdots + X_n)^2] - \E[X_1 + X_2 + \cdots + X_n]^2 \\
-&= \sum_{i=1}^n\E[X_i^2] + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\E[X_iX_j] - \sum_{i=1}^n\E[X_i]^2 - 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\E[X_i]\E[X_j] \\
-&= n + 0 - 0 - 0 \\
+&= \E[(X_1 + X_2 + \cdots + X_n)^2] - \E[X_1 + X_2 + \cdots + X_n]^2  \notag  \\
+&= \sum_{i=1}^n\E[X_i^2] + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\E[X_iX_j] - \sum_{i=1}^n\E[X_i]^2 - 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}\E[X_i]\E[X_j] \notag \\
+&= n + 0 - 0 - 0 \notag  \\
 &= n
-\end{aligned}
-\end{equation}
+\end{align}
 
-In addition, we can calculate $\sum_{S}\Var(X_S)$ as follows:
-\begin{equation}
-\begin{aligned}
+Moreover, we can calculate $\sum_{S}\Var(X_S)$ as follows:
+
+\begin{align} \label{eq:1-3-4}
 \sum_{S}\Var(X_S) &= \Var(X_1) + \Var(X_2) + \cdots + \Var(X_n) \notag \\
-&= (\E[X_1] - \E[X_1]^2) + (\E[X_2] - \E[X_2]^2) + \cdots + (\E[X_n] - \E[X_n]^2) \\
-&= (1 - 0) + (1 - 0) + \cdots + (1 - 0) \\
+&= (\E[X_1^2] - \E[X_1]^2) + (\E[X_2^2] - \E[X_2]^2) + \cdots + (\E[X_n^2] - \E[X_n]^2) \notag  \\
+&= (1 - 0) + (1 - 0) + \cdots + (1 - 0) \notag  \\
 &= n
-\end{aligned}
-\end{equation}
+\end{align}
 
-Obviously, the above results are consistent with the results in problem I(b).
+According to Eq. \eqref{eq:1-3-3} and Eq. \eqref{eq:1-3-4}, we can conclude that $\Var(\sum_{S}X_S) = \sum_{S}\Var(X_S)$, which is consistent with the conclusion in part (b).
 
 \end{enumerate}
 \end{problem}
@@ -108,33 +110,27 @@ Define a random variable $X$ (depends on $D$) such that the collision probabilit
 \end{hint}
 
 \Answer
-First, we define a random variable $X$ with the random distribution $D$, \ie, $P(X = i) = \frac{1}{n}$, $\forall i \in \{1, 2, ..., n\}$. 
 
-Second, we define a random variable $Y = \{Y_1, Y_2, \cdots, Y_n\}$ with the distribution $Y$, we assume that $P(Y = i) = p_i$, and we can obtain $\sum_{i=1}^{n}p_i = 1$.
+We first define a random variable $X$ with the uniform distribution, \ie, $P(X = i) = \frac{1}{n}$, $\forall i \in \{1, 2, ..., n\}$. Then, we define a set of random variables $Y=\{y_1, y_2, ..., y_n\}$ with the distribution $D$. We let $p_i$ denote the probability of selecting $y_i$ from the set $Y$, and we have $\sum_{i=1}^n p_i =1$.
 
-We define the collision probability of $Y$ as $\sum_{i=1}^{n}p_i^2$, which means the probability that two variables drawn independently from $Y$ are the same.
+The collision probability of $Y$ can be rewrote to $\sum_{i=1}^n p_i^2$, which denotes the probability of independently drawing two identical variables from $Y$.
 
-According to the \textit{Average Inequality}: $\sqrt{\frac{\sum_{i=1}^{n}x_i^2}{n}} \ge \frac{\sum_{i=1}^{n}x_i}{n}$,
-we have $\sum_{i=1}^{n}p_i^2 \ge n \cdot (\frac{\sum_{i=1}^{n}p_i}{n})^2 = n \cdot (\frac{1}{n})^2 = \frac{1}{n}$.
-Only when $p_i = \frac{1}{n}$, $\sum_{i=1}^{n}p_i^2$ can achieve the minimum value $\frac{1}{n}$,
-so that the collision probability of $Y$ (\ie, $\sum_{i=1}^{n}p_i^2$) achieves the minimum value $\frac{1}{n}$.
+\begin{definition}[Average Inequality]
+    \begin{align}\label{eq:average}
+        \sqrt{\frac{\sum_{i=1}^n x_i^2}{n}} \geq \frac{\sum_{i=1}^n x_i}{n}
+    \end{align}
+\end{definition}
 
-We can also calculate the $l_2$ distance of distribution $Y$ and $D$ to further prove the conclusion of the above minimum value:
-\begin{equation}
-\begin{aligned}
-||Y - D||_2 &= \sqrt{\sum_{i=1}^{n}(p_i - \frac{1}{n})^2} \notag \\
-&= \sqrt{\sum_{i=1}^{n}{(p_i^2 - \frac{2p_i}{n} + \frac{1}{n^2})}} \\
-&= \sqrt{\sum_{i=1}^{n}p_i^2 - \frac{2}{n}\sum_{i=1}^{n}p_i + \sum_{i=1}^{n}\frac{1}{n^2}} \\
-&= \sqrt{\sum_{i=1}^{n}p_i^2 - \frac{2}{n} + \frac{1}{n}} \\
-&= \sqrt{\sum_{i=1}^{n}p_i^2 - \frac{1}{n}} \\
-\end{aligned}
-\end{equation}
+According to Eq. \eqref{eq:average}, we have 
 
-Because $||Y - D||_2 \ge 0 \Rightarrow \sum_{i=1}^{n}p_i^2 \ge \frac{1}{n}$, with equality holds only when $p_i = \frac{1}{n}$. 
+\begin{align}\label{eq:2-1}
+    \sum_{i=1}^n p_i^2 \geq n \cdot (\frac{\sum_{i=1}^2 p_i}{n})^2= n \cdot (\frac{1}{n})^2 = \frac{1}{n}
+\end{align}
 
-Finally, we prove that the uniform distribution has the smallest possible collision probability over all distributions.
+Eq. \eqref{eq:2-1} denotes that the collision probability can achieve the minimum value, if and only if $p_i=\frac{1}{n}$. As a result, we can conclude that the uniform distribution has the smallest collision probability among all distributions.
 \end{problem}
 
+~\\
 
 \begin{problem}[Birthday paradox 10 points.]
 Suppose everybody's birthday is a uniform random number in $\{1, 2, \cdots, 365\}$ independently.
@@ -147,42 +143,32 @@ Think of this as balls into bins with $n = 365$ bins.
 
 \Answer
 
-We transform the problem to at most how many persons do not have the same birthday with a probability of no more than $\frac{1}{2}$ ?
-The probability is as follows:
-\begin{equation}
-\begin{aligned}
-\mathbf{Pr}[\forall i \neq j, b_i \neq b_j] = (1 - \frac{1}{n})(1 - \frac{2}{n}) \cdots (1 - \frac{m - 1}{n}) \le \frac{1}{2} \notag
-\end{aligned}
-\end{equation}
+The problem can be converted to \textit{at least how many persons do not have the same birthday with a probability of no more than $\frac{1}{2}$ ?}.
 
-According to \textit{Taylor Formula}, the polynomial expansion of exponential function is as follows:
+\begin{align}\label{eq:3-1}
+P= (1 - \frac{1}{n})(1 - \frac{2}{n}) \cdots (1 - \frac{m - 1}{n}) \le \frac{1}{2}
+\end{align}
 
-\begin{equation}
-\begin{aligned}
-\exp(x) = \sum_{k=0}^{+\infty} \frac{x^k}{k!} = 1 + x + \frac{x^2}{2} + \frac{x^3}{6} + \frac{x^4}{24} + \cdots \notag
-\end{aligned}
-\end{equation}
+We now give the inequality $e^x \ge 1 + x, \forall x \ge 0$, and apply it to Eq. \eqref{eq:3-1}.
 
-When $x \ge 0$, $1 + x \le e^x$, and we replace it in the above equation:
-\begin{equation}
-\begin{aligned}
-\mathbf{Pr}[\forall i \neq j, b_i \neq b_j] &= (1 - \frac{1}{n})(1 - \frac{2}{n}) \cdots (1 - \frac{m - 1}{n}) \\ \notag
-& \le e^{-\frac{1}{n}}e^{-\frac{2}{n}} \cdots e^{-\frac{m-1}{n}} \\
-& = e^{-\frac{1}{n}-\frac{1}{n} \cdots -\frac{1}{n}} \\
-& = e^{-\frac{m(m-1)}{2n}} \le \frac{1}{2}
-\end{aligned}
-\end{equation}
+\begin{align}
+    \notag P&= (1 - \frac{1}{n})(1 - \frac{2}{n}) \cdots (1 - \frac{m - 1}{n}) \\ 
+    \notag & \le e^{-\frac{1}{n}}e^{-\frac{2}{n}} \cdots e^{-\frac{m-1}{n}}
+    = e^{-\frac{1}{n}-\frac{2}{n} \cdots -\frac{m-1}{n}} \\ 
+& = e^{-\frac{m \cdot (m-1)}{2n}} \le \frac{1}{2}
+\end{align}
 
-Thus, we have:
-\begin{gather*}
-e^{-\frac{m(m-1)}{2n}} \le \frac{1}{2}, \\ \notag
--\frac{m(m-1)}{2n} \le -ln2, \\
-m(m - 1) - 2n ln 2 \ge 0, \\
-m^2 - m - 2n ln 2 \ge 0, \\
-m \ge \frac{1 + \sqrt{1 + 8n ln2}}{2} \approx 23.\\
-\end{gather*}
+Further, we have:
 
-When $n = 365$, we can obtain the best estimation of $m$ is 23.
+\begin{align}
+    \notag e^{-\frac{m(m-1)}{2n}} \le \frac{1}{2}  
+    & \Rightarrow -\frac{m(m-1)}{2n} \le -ln2, \\  
+    \notag &\Rightarrow m^2 - m - 2n ln 2 \ge 0 \\ 
+&\Rightarrow m \ge \frac{1 + \sqrt{1 + 8n ln2}}{2}
+\end{align}
+
+Given $n = 365$, we need to ask at least 23 people, \ie, $m=23$, such that with probability more than $\frac{1}{2}$, two of them will have the same birthday.
+
 \end{problem}
 
 ~\\
@@ -194,13 +180,50 @@ Let us finish the calculation about variance left in lecture 1. Consider the sim
 
 \Answer
 
+According to lecture 1, when $k<\frac{3\log n}{\log\log n}$, the expected number of bins with k is $\frac{n}{ek!}$. We have
+
+\begin{align} \label{eq:4-1-1}
+    \begin{cases}
+        \E[Z_i] = P(Z_i=1)=\frac{\tbinom{\frac{n}{ek!}}{1}}{\tbinom{n}{1}} , \forall i \in \{1, 2, ... , n\}\\
+        \E[Z_i^2] = P(Z_i=1)=\frac{\tbinom{\frac{n}{ek!}}{1}}{\tbinom{n}{1}} , \forall i \in \{1, 2, ... , n\} \\
+        \E[Z_i Z_j] = P(Z_i=1, Z_j=1)=\frac{\tbinom{\frac{n}{ek!}}{2}}{\tbinom{n}{2}} , \forall i \neq j
+    \end{cases}
+\end{align}
+
+Given the definition of covar, we have
+\begin{align} \label{eq:4-1-2}
+    \notag |\Cov(Z_i, Z_j)|&=|\E[Z_i Z_j] - \E[Z_i]\E[Z_j]|\\
+    \notag &=|\frac{\tbinom{\frac{n}{ek!}}{2}}{\tbinom{n}{2}} - [\frac{\tbinom{\frac{n}{ek!}}{1}}{\tbinom{n}{1}}]^2|\\
+    \notag & = |\frac{\frac{n}{ek!}{(\frac{n}{ek!}-1)}}{n(n-1)} - (\frac{1}{ek!})^2|\\
+    & =| \frac{\frac{1}{ek!}-1}{ek!}\frac{1}{n-1}| = O(\frac{1}{n})
+\end{align}
+
+When $k \ge \frac{3\log n}{\log\log n}$, the expected number of bins with k is 0.
+
+Therefore, we can prove that $ |\Cov(Z_i,Z_j)| =  O(\frac{1}{n})$.
+
 \item Show that $ \Var (Z_1 + \dots+Z_n)=O(n)$.
 
 \Answer
 
+From Eq. \eqref{eq:1-b}, we have $\Var(Z_1 + \cdots + Z_n) = \sum_{i=1}^{n}{\Var(Z_i)} + 2\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}{\Cov(Z_i, Z_j)}$.
+
+Considering the conclusion in part(a), we have
+
+\begin{align}
+    \notag & \frac{n}{ek!} + n(n-1)[(\frac{1}{ek!})^2 + O(\frac{1}{n})] -(\frac{n}{ek!})^2 \\
+    & = \frac{n}{ek!} - \frac{n}{(ek!)^2} +n(n-1)O(\frac{1}{n})= O(n)
+\end{align}
+
 \item Apply the Chebyshev's inequality to conclude that with prob $1-n^{-1/2}$, the number of bins with exact $k$ balls is $\frac{n}{k! \cdot e } ± O(n^{0.75})$.
 
 \Answer
+
+From lecture 1, we have $P[|X-\E[X]| > C\sigma] \leq \frac{1}{C^2}$, where $\sigma = \sqrt{\Var(X)}$ and $C > 1$. Let $\frac{1}{C^2} = n^{-1/2}$, thereby $C = \sqrt{\frac{1}{n^{-1/2}}}$.
+\begin{align}
+    \notag C\sigma &= \sqrt{\frac{1}{n^{-1/2}}}\sqrt{O(n)} \\
+    & = \sqrt{O(n)n^{1/2}}= O(n^{0.75})
+\end{align}
 
 \end{enumerate}
 \end{problem}
@@ -219,11 +242,7 @@ the max-load is $\log_d{\log n} + O(1)$ instead of $\log_2{\log n} + O(1)$
 
 Base case: $m_3 \le \frac{n}{3}$;
 
-According to \textit{Chernoff bounds},
-
 Bounding $m_4$: since $\E[m_4] \le \frac{n}{3^d}$, it implies $m_4 \le 1.1 \cdot \frac{n}{3^d}$ w.h.p;
-
-Then, we can obtain:
 
 Bounding $m_5$: $m_5 \le 1.1n \cdot (\frac{m_4}{n})^d = 1.1^{d+1} \cdot \frac{n}{3^{d^2}}$;
 
@@ -231,17 +250,16 @@ $\cdots$
 
 Bounding $m_l$: $m_l \le 1.1^{d^{l-3}-1} \cdot \frac{n}{3^{d^{l-3}}} \le \frac{n}{2^{d^{l-3}}}$.
 
-We take logarithms on both sides of the equation:
-\begin{equation}
-\begin{aligned}
-& \frac{n}{2^{d^{l-3}}} \le 1\\ \notag
-\Rightarrow & n \le 2^{d^{l-3}} \\
-\Rightarrow & \log_2 n \le d^{l-3} \\
-\Rightarrow & \log_d{\log_2 n} \le l-3
-\end{aligned}
-\end{equation}
+Taking the logarithm of both sides of the inequality, we have:
 
-Finally, we can prove that with probability $1 - n^{-2}$, the max-load is $\log_d{\log n} + O(1)$.
+\begin{align}
+    \notag \frac{n}{2^{d^{l-3}}} \le 1  & \Rightarrow n \le 2^{d^{l-3}} \\
+    \notag & \Rightarrow  \log_2 n \le d^{l-3} \\
+    & \Rightarrow \log_d{\log_2 n} \le l-3
+\end{align}
+
+As a result, we can prove the max-load is $\log_d{\log n} + O(1)$.
+
 \end{problem}
 
 \end{document}
