@@ -1,0 +1,380 @@
+\include{../header.tex}
+
+\begin{document}
+
+\noindent
+\hspace*{.2in} COMP7102P Fall 2022
+\hfill Homework 2\\
+\begin{CJK}{UTF8}{gbsn}
+    \hspace*{.2in} \textcolor{red}{BA22011024 \Name{} \ChineseName} \hfill due: Oct. 13, 09:30
+\end{CJK}
+
+\bigskip
+%When asked to design an algorithm with certain properties, you must prove that these properties hold for your algorithm.
+
+
+\begin{problem}[15 points]
+Recall the sequence of random variables defined in part 4 of Problem 1 in the 1st homework: Let $Z = \sum_{S}X_S$ in this problem. Given the fact $\Var(Z) = n$, answer the following two questions.
+
+\begin{enumerate}[(a)]
+\item Show that for any $C > 1$, $\mathbf{Pr}[|Z| \ge C\sqrt{n}] \le \frac{1}{C^2}$ by Chebyshev's inequality.
+
+\Answer
+According to the definition of $Z_i$, we can obtain $\E[Z_i] = 1 \cdot \frac{1}{2} + (-1) \cdot \frac{1}{2} = 0, \E[Z_i^2] = 1^2 \times \frac{1}{2} + (-1)^2 \times \frac{1}{2} = 1, \forall i \in \{1, 2, \cdots, d\}$,
+Since each coin $Z_i$ is independent, we have:
+\begin{align}
+    \E[X_S] = \E[\prod_{i \in S} Z_i] = \prod_{i \in S} \E[Z_i] = 0\\
+    \E[Z] = \E[\sum_{S} X_S] = \sum_{S}\E[X_S] = 0
+\end{align}
+Let $\epsilon = C \cdot \sqrt{n}$. Since $C \ge 1$ and $n=2^d -1$, we have $\epsilon \ge 0$. According to Chebyshev's inequality, we have 
+\begin{align} \label{eq:1}
+    \mathbf{Pr}[|Z - \E[Z]| \geq \epsilon] \le \frac{\Var{Z}}{\epsilon^2}
+\end{align}
+Given the fact that $\E[Z] = 0$ and $\Var(Z) = n$, we can convert Eq. \eqref{eq:1} to 
+\begin{align}
+    &\notag\mathbf{Pr}[|Z| \geq C \cdot \sqrt{n}] \le \frac{n}{C^2 \cdot n} \\
+    \Rightarrow & \mathbf{Pr}[|Z| \geq C \cdot \sqrt{n}] \le \frac{1}{C^2}
+\end{align}
+
+
+\item Describe the distribution of $Z$ (by computing $\mathbf{Pr}[Z = l]$ for every $l = 0, 1, \cdots, n$) and compare it with the concentration bound shown in (a).
+
+\Answer
+We use $a$ and $b$ to denote the number of 1 and -1 in $\{Z_i\}$, separately, where $ a+b = d$.
+We first consider the number of 1 in $\{Z_i\}$ when $d=3$.
+\begin{itemize}
+    \item \textbf{a=0}: $Z= -1-1-1+1+1+1-1 = -1$. Only $C_3^0=1$ kind.
+    \item \textbf{a=1}: Supposing $Z_1=1$, $Z= 1-1-1-1-1+1+1 =-1$. $C_3^1=3$ kinds.
+    \item \textbf{a=2}: Supposing $Z_1=1, Z_2=1$, $Z= 1+1-1+1-1-1-1 =-1$. $C_3^2=3$ kinds.
+    \item \textbf{a=3}: $Z= 1+1+1+1+1+1+1 =7$. $C_3^3=1$ kind.
+\end{itemize} 
+
+From the above analysis, we can conlude that the value of $Z$ can be calculated as following:
+\begin{equation} \label{eq:2}
+    Z = C_a^1 - C_b^1 + C_a^2 - C_a^1 \cdot C_b^1 + C_b^2 + \dots
+\end{equation}
+
+According to the binomial theorem, we can convert Eq. \eqref{eq:2} to 
+\begin{equation}
+    Z= (1+x)^a \cdot (1-x)^b-1
+\end{equation}
+
+When $a=d$, we have $Z= C_a^1+C_a^2+\dots+C_a^a=2^a-1 = 2^d-1=n$. Let $x=1$, we have $Z=-1$.
+
+Thus, we can conclude that $\mathbf{Pr}[Z = 2^d - 1] = \frac{1}{2^d} = \frac{1}{n+1}$ and $\mathbf{Pr}[Z = -1] = 1 - \frac{1}{2^d} = 1 - \frac{1}{n+1}$.
+
+When $Z = -1$, $\mathbf{Pr}[|Z| \ge C\sqrt{n}] = \mathbf{Pr}[1 \ge C\sqrt{n}] = 0 \le \frac{1}{C^2}$ (for any $C > 1$) is satisfied. \\
+When $Z = 2^d - 1 = n$, if $1 < C \le \sqrt{n}$, $\mathbf{Pr}[|Z| \ge C\sqrt{n}] = \frac{1}{n+1} \le \frac{1}{C^2}$ is satisfied; if $C > \sqrt{n}$, $\mathbf{Pr}[|Z| \ge C\sqrt{n}] = \mathbf{Pr}[n \ge C\sqrt{n}] = 0 \le \frac{1}{C^2}$ is satisfied. 
+
+\end{enumerate}
+\end{problem}
+
+\begin{problem}[30 points]
+Recall that a hash family $H$ is 4-wise independent if and only if it satisfies for any four distinct balls a; b; c; and d, \\
+$(h(a), h(b), h(c), h(d))$ gives the uniform distribution over $[n] \times [n] \times [n] \times [n]$ for a random $h \sim H$. \\
+Similar to the 2nd problem, let us consider $n$ fixed balls into $n$ bins: we sample $h \sim H$ from a 4-wise independent hash family and throw ball $A$ into bin $H(A)$ directly.
+
+We use $X$ to denote the load of the 1st bin under a random $h \sim H$. The goal of this problem is to show that 4-wise independence gives better bound on the max-load than pariwise independence.
+
+\begin{enumerate}[(a)]
+\item Show $\E[|X - \E[X]|^4] \le 4$.
+
+\Answer
+Say the $n$ balls are $\{1,2, \dots, n\}$ such that $X=\sum_{i=1}^n \mathbf{I}(h(i)=1)$, where $\mathbf{I}$ denotes the indicator function. Let $Z_i = \mathbf{I}(h(i)=1)-\E[\mathbf{I}(h(i)=1)]$ in this calculation. As a result, $\E[|X - \E[X]|^4]=\E[(\sum_i Z_i)^4]$. Moreover, we have $\mathbf{Pr}[Z_i = 1 - \frac{1}{n}] = \frac{1}{n}$ and $\mathbf{Pr}[Z_i = -\frac{1}{n}] = 1 - \frac{1}{n}$. Since these $n$ indicator functions are 4-wise independent, $Z_1, Z_2, \dots, Z_n$ are 4-wise independent either.
+
+First, we compute the first 4 moments of $Z_i$ as follows:
+
+\begin{align}
+& \E[Z_i] = (1 - \frac{1}{n}) \cdot \frac{1}{n} + (-\frac{1}{n}) \cdot (1 - \frac{1}{n}) = 0 \notag \\
+& \E[Z_i^2] = (1 - \frac{1}{n})^2 \cdot \frac{1}{n} + (-\frac{1}{n})^2 \cdot (1 - \frac{1}{n}) = \frac{n-1}{n^2} \notag \\
+& \E[Z_i^3] = (1 - \frac{1}{n})^3 \cdot \frac{1}{n} + (-\frac{1}{n})^3 \cdot (1 - \frac{1}{n}) = \frac{(n-1)(n-2)}{n^3} \notag \\
+& \E[Z_i^4] = (1 - \frac{1}{n})^4 \cdot \frac{1}{n} + (-\frac{1}{n})^4 \cdot (1 - \frac{1}{n}) = \frac{(n-1)(n^2-3n+3)}{n^4} \notag
+\end{align}
+
+Then we expand $\E[(\sum_{i}{Z_i})^4]$ with linearity of expectation as follows:
+
+\begin{align} \label{eq:3}
+\E[(\sum_{i}{Z_i})^4] = & \sum_{i}{\E[Z_i^4]} + 6 \cdot \sum_{i<j}{\E[Z_i^2 Z_j^2]} + 24 \cdot \sum_{i<j<k<l}{\E[Z_i Z_j Z_k Z_l]} \notag \\
+& + 12 \cdot \sum_{i<j \text{ and } k \notin {i,j}}{\E[Z_i Z_j Z_k^2]} + 4 \cdot \sum_{i \neq j}{\E[Z_i^3 Z_j]}
+\end{align}
+
+Since the hash family $H$ is 4-wise independent, $Z_i$ are also 4-wise independent, we have:
+
+\begin{align}
+& \E[Z_i^2 Z_j^2] = \E[Z_i^2]\E[Z_j^2] = \frac{(n-1)^2}{n^4} \notag \\
+& \E[Z_i Z_j Z_k Z_l] = \E[Z_i]\E[Z_j]\E[Z_k]\E[Z_l] = 0 \notag \\
+& \E[Z_i Z_j Z_k^2] = \E[Z_i]\E[Z_j]\E[Z_k^2] = 0 \notag \\
+& \E[Z_i^3 Z_j] = \E[Z_i^3]\E[Z_j] = 0 \notag
+\end{align}
+
+We plug these into Eq. \eqref{eq:3}:
+
+\begin{align}
+\E[(\sum_{i}{Z_i})^4] = & \sum_{i}{\E[Z_i^4]} + 6 \cdot \sum_{i<j}{\E[Z_i^2 Z_j^2]} \notag \\
+& = n \cdot \frac{(n-1)(n^2-3n+3)}{n^4} + 6 \cdot \frac{n(n-1)}{2} \cdot \frac{(n-1)^2}{n^4}  \notag \\
+& = \frac{4n^3 - 13n^2 + 15n - 6}{n^3} = 4 - \frac{13n^2 - 15n +6}{n^3}
+\end{align}
+
+Since $13n^2 - 15n +6 > 0$ holds for any $n \in N^*$, we have $4 - \frac{13n^2 - 15n +6}{n^3} < 4$, \ie $\E[|X - \E[x]|^4] \le 4$.
+
+\item Prove this generalized Chebyshev's inequality (check lecture note 2 for the proof of the Chebyshev's inequality)
+\begin{gather*}
+\mathbf{Pr}[|X - \E[X]| \ge k] \le \frac{\E[|X - \E[X]|^4]}{k^4} \notag \\
+\end{gather*}
+and conclude that $\mathbf{Pr}[X \ge i] \le \frac{4}{(i - 1)^4}$ for any $i \ge 3$.
+
+\Answer 
+Let $Y = |X - \E[X]|^4$, we know $\mathbf{Pr}[Y \ge \frac{\E[Y]}{\epsilon^4}] \le \epsilon^4$ from Markov's inequality.
+
+Taking the $\frac{1}{4}$ root of $Y$ and $\epsilon$, we can obtain 
+\begin{equation}
+    \mathbf{Pr}[|X - \E[X]| \ge \frac{1}{\epsilon}\sqrt[4]{\E[Y]}] \le \epsilon^4
+\end{equation}
+Let $k=\frac{1}{\epsilon}\sqrt[4]{\E[Y]}$, and we can obtain 
+\begin{equation}
+    \mathbf{Pr}[|X - \E[X]| \ge k] \le \frac{\E[Y]}{k^4} = \frac{\E[|X - \E[X]|^4]}{k^4}
+\end{equation}
+
+Since $\E[X] = \sum_{i=1}^{n}{\E[h(i) = b_1]} = 1$. We have 
+\begin{equation}
+    \mathbf{Pr}[|X - \E[X]| \ge k] = \mathbf{Pr}[X \ge k + 1]\le \frac{\E[|X - \E[X]|^4]}{k^4}
+\end{equation}
+From part (a) we have $\E[|X - \E[X]|^4] \le 4$, so $\mathbf{Pr}[X \ge k + 1]\le \frac{4}{k^4}$. Let $i=k+1$, we can obtain that $\mathbf{Pr}[X \ge i]\le \frac{4}{(i-1)^4}$ for any $i \ge 3$.
+
+
+\item Derive a bound on the max-load for 4-wise independence.
+
+\Answer
+
+We use $M$ to denote the max-load, and formulate the probability as follows
+\begin{equation}
+    \mathbf{Pr}[M \ge k] \le \sum_{i} \mathbf{Pr}[X \ge k] = n \cdot \mathbf{Pr}[X \ge k] \notag
+\end{equation}
+From (b), we have $ \mathbf{Pr}[X \ge k]\le \frac{4}{(k-1)^4}$. Note that, we want there is no bin has more than $k$ balls with probability $p$, which means
+
+\begin{equation}
+     \mathbf{Pr}[M \ge k] = n \cdot  \mathbf{Pr}[X \ge k] \le n \cdot \frac{4}{(k-1)^4} \le 1-p \notag
+\end{equation}
+
+As a result, $k \ge 1 + \sqrt[4]{\frac{4n}{1-p}} = \Theta(\sqrt[4]{n})$.
+
+\item What is the max-load of 2-wise independence? Compare it with the bound in (c) and discuss the tradeoff.
+
+\Answer
+The maximum load for a pariwise independence is $\Theta(\sqrt{n})$, which is more than the maximum load for a 4-wise independence ($\Theta(\sqrt[4]{n})$).
+Therefore, to get a higher concentration than pairwise independence, we employ greater randomness (4-wise independence).
+On the one hand, we can use the pariwise independence hash for convenience when $n$ is small. Otherwise, we can employ 4-wise independence to achieve outstanding performance with a lower max-load (or collision probability).
+
+
+\item If we use $k$-wise independent hash function for a even constant $k > 4$, what is the max-load? No need to show your calculations.
+
+\Answer $\Theta(\sqrt[k]{n})$
+
+\end{enumerate}
+\end{problem}
+
+\begin{problem}
+    Recall the goal of hash is to solve the dictionary problem. For many applications, all elements in $S$ are fixed (or barely change); and the only operation is \textsc{Lookup}. In this case, there is a much more efficient solution (with a small failure probability).
+
+    Consider $S = \{b_1 , \dots , b_m \}$ with $m$ fixed balls. We prepare $k$ independent perfectly random hash functions $h_1 , \dots , h_k$ and one table $T : [n] \rightarrow \{0, 1\}$. There are two procedures:
+
+\begin{algorithm}[ht]
+\begin{algorithmic}[1]
+    \Procedure{Initialization}{$S$}
+        \State Set all marks in $T$ to be false
+        \For{$b_i \in S$}
+        \For{$j \in [k]$}
+        \State Mark $T[h_j(b_i)]=1$
+        \EndFor
+        \EndFor
+    \EndProcedure
+
+    \Function{Lookup}{$b$}
+    \If{$(T[h_1(b_i)]=1) \wedge  (T[h_2(b_i)]=1) \wedge \dots \wedge (T[h_k(b_i)]=1)$}
+    \State Return 1
+    \EndIf
+    \State Return 0
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+While it is easy to implement and efficient, let us analyze its performance.
+\begin{enumerate}[(a)]
+    \item Prove that if $b\in S$, \textsc{Lookup}$(b)$ always returns the correct answer 1.
+    
+    \Answer
+    For each $b\in S$, it will return 0 only if there is one $T[h_j(b_i)]=0 ,\forall j \in [k]$. From line 2 and 4-6 of procedure INITIALIZATION, we know that once $T[h_j(b_i)]$ is set to 1, it won't be set to 0. Therefore, if $b\in S$, the procedure will set $T[h_j(b_i)]=1 ,\forall j \in [k]$, \ie, there is no $T[h_j(b_i)]=0 ,\forall j \in [k]$.
+
+    \item But \textsc{Lookup}$(b)$ may return 1 for $b \notin S$, let us analyze this failure probability. Write down $\mathbf{Pr}_{h_1 ,\dots,h_k}[\textsc{Lookup}(b) = 1]$ for $b \notin S$ as a probability of $k, n, m$.
+    
+    \Answer
+
+    We first consider the situation of hash $h_1$ with one ball $b$, we have 
+    \begin{align}
+        \begin{cases}
+            \mathbf{Pr}[T[h_j(b)]=1]=\frac{1}{n} \\
+            \mathbf{Pr}[T[h_j(b)]=0]=1- \frac{1}{n}
+        \end{cases}
+    \end{align}
+     
+    Expanding the situation to $k$ hashs, we have
+    \begin{equation}
+        \mathbf{Pr}_{h_1 ,\dots,h_k}[\textsc{Lookup}(b) = 0]=(1-\frac{1}{n})^k
+    \end{equation}
+
+    Now, we consider the situation with $m$ balls, the above equation can be expanded as following
+    \begin{equation}
+        \begin{cases}
+            \mathbf{Pr}_{h_1 ,\dots,h_k}[\textsc{Lookup}(b) = 0]=(1-\frac{1}{n})^{km} \\
+            \mathbf{Pr}_{h_1 ,\dots,h_k}[\textsc{Lookup}(b) = 1]=1- (1-\frac{1}{n})^{km}
+        \end{cases}
+    \end{equation}
+
+    As a result, the failure probability is 
+    \begin{align}
+        &\mathbf{Pr}_{h_1 ,\dots,h_k}[\textsc{Lookup}(b) = 1] \notag \\
+        = &\mathbf{Pr}[T[h_1(b)]=1] \wedge \mathbf{Pr}[T[h_2(b)]=1] \wedge \dots \wedge \mathbf{Pr}[T[h_k(b)]=1] \notag \\
+        =&(1- (1-\frac{1}{n})^{km})^k \notag \\
+        \approx& (1-e^{-\frac{km}{n}})^k
+    \end{align}
+     
+ 
+    \item Suppose $n=C \cdot m$ for a constant $C \ge 1$. Find a good choice of $k$ to minimize the probability in (b).
+    
+    \Answer
+    We use $\mathbf{Pr}$ to denote $\mathbf{Pr}_{h_1 ,\dots,h_k}[\textsc{Lookup}(b) = 1]$, by taking logarithm of $P$, we have
+    
+    \begin{align}
+        f(k)&= \ln \mathbf{Pr} = k \ln[1-e^{-\frac{km}{n}}] = k \ln[1-e^{-\frac{k}{C}}] \\
+        f'(k) &= ln[1-e^{-\frac{k}{C}}] + k \frac{e^{-\frac{k}{C}}}{C(1-e^{-\frac{k}{C}})}
+    \end{align}
+
+    Let $t$ denote $e^{-\frac{k}{C}}$ and we can obtain
+
+    \begin{align}   
+        &\ln(1-t) + k \frac{t}{C(1-t)} =0 \notag\\
+    \Rightarrow & \frac{\ln(1-t)}{\ln t}= \frac{t}{1-t}  \notag\\
+    \Rightarrow &t=\frac{1}{2}
+    \end{align}
+    
+    As a result, $k = C \cdot \ln 2$.
+
+
+    \item  Simplify the probability in (b) using your choice in (c).
+    \Answer
+    \begin{equation}
+        \begin{aligned}
+            \mathbf{Pr}&=\bigg[1-(1-\frac{1}{n})^{km}\bigg]^k \notag\\
+            &\approx \bigg[1-e^{-\frac{k}{C}}\bigg]^k\\
+            &=\bigg[1-e^{-\frac{Cln2}{C}}\bigg]^{Cln2}\\
+            &=(\frac{1}{2})^{Cln2}
+        \end{aligned}
+    \end{equation}
+\end{enumerate}
+\end{problem}
+
+\begin{problem}[40 points]
+    Consider the following algorithm for heavy hitters: Let $M$ be the number of possible elements and $N$ be the length of the input sequence.
+    \begin{enumerate}
+        \item \textsc{Initialization}: For $B = 10/\epsilon$, we prepare $\ell = \log_2(N \cdot M/\delta )$ pairwise independent hash $h_1 , \dots , h_\ell : [M] \rightarrow [B]$ and set $CMS[1, \dots , \ell][0, \dots , B-1] = 0$.
+        \item \textsc{Process}: For each element $i$, we increase $CMS[j][h_j(i)]$ by 1 for each $j \in [\ell]$.
+        \item \textsc{Query}$(i \in [M])$: Output $\widetilde{f}_i = \min\{CMS[1][h_1(i)],CMS[2][h_2(i)],\dots,CMS[d][h_d(i)]\}$ as the approximation of the frequency of element $i$.
+    \end{enumerate}
+    Please modify the above algorithm or supplement a procedure to implement the following functionality separately (and prove the correctness of your codes).
+
+    \begin{enumerate}[(a)] 
+        \item Prove that for every element $i$ and every hash $j \in [\ell]$,
+        \begin{equation}
+            \notag \mathbf{Pr}[|CMS[j][h_j(i)]-f_j(t)| \geq \epsilon \cdot t] \leq 0.1
+        \end{equation}
+
+        \Answer
+        For simplicity, we use $Y_i$ to denote $|CMS[j][h_j(i)]-f_j(t)|$ and we have
+        \begin{equation}
+            Y_i = \sum_{k \in [U]-\{i\}}  \mathbf{I}(h_j(k)=h_j(i)) \cdot f_k(t)
+        \end{equation}
+
+        Since $h_j$ is pairwise independent, for each element $i$ and hash  $j \in [\ell]$, we have
+        \begin{align}
+            \notag \E[Y_i]&=\E[ \sum_{k \in [U]-\{i\}}  \mathbf{I}(h_j(k)=h_j(i)) \cdot f_k(t)] \\
+            & =   \sum_{k \in [U]-\{i\}} \frac{f_k(t)}{B} \leq \frac{t}{B}
+        \end{align}
+        
+        According to the Markov's inequality
+        \begin{align}
+            \notag\mathbf{Pr}[Y_i \geq \epsilon \cdot t] &\leq \frac{\E[Y_i]}{(\epsilon \cdot t)^2} \\
+            & \leq  \frac{t}{B\cdot (\epsilon \cdot t)^2} 
+        \end{align}
+
+        Plug $B=\frac{10}{\epsilon}$ to the above equation, we obtain $\mathbf{Pr}[Y_i \geq \epsilon \cdot t] \leq \frac{1}{10 \cdot \epsilon \cdot t}=0.1$.
+
+        \item Prove that with probability $1 - \delta$, the algorithm guarantees that for every element $i$, at any moment $t$
+        \begin{equation}
+            \notag |CMS[j][h_j(i)]-f_j(t)| \le \epsilon \cdot t
+        \end{equation}
+
+        \Answer
+        We first prove that for each element $i$, at any moment $t$
+        \begin{equation}
+            \mathbf{Pr}[|CMS[j][h_j(i)]-f_j(t)| \geq \epsilon \cdot t] \leq \frac{\delta}{N \cdot M}    
+        \end{equation}
+        
+        Let $X_i \in \{0,1\}$ denote whether $|CMS[j][h_j(i)]-f_j(t)| \geq \epsilon \cdot t$ or not, for a given $j$. According to (a), we have
+        \begin{equation}
+            \E[X_i]\leq \frac{1}{10} \Rightarrow \E[\sum_{i=1}^n X_i] \leq \frac{\ell}{10}
+        \end{equation}
+
+        Let $\mu=\frac{\ell}{10}$, $\delta=9$. According to the Chernoff bounds, we have
+        \begin{align}
+            \mathbf{Pr}[\sum_{i=1}^n X_i \geq (1+9) \cdot \frac{\ell}{10}] \leq e^{-\frac{81\cdot l}{3 \cdot 10}} \notag \\
+            \Rightarrow \mathbf{Pr}[\sum_{i=1}^n X_i \geq \ell] \leq e^{-\frac{81 \cdot \ell}{30}}
+        \end{align}
+
+        Since $\ell = \log_{2}(\frac{N\cdot M}{\delta})$, we have
+        \begin{align}
+            \mathbf{Pr}[\sum_{i=1}^n X_i \geq \ell] \leq e^{-\frac{81 \cdot \ell}{30}} \notag \\
+            =(\frac{\delta}{N \cdot M})^{\frac{81}{30}} \leq \frac{\delta}{N \cdot M}
+        \end{align}
+
+        By applying the union bounds, we have
+
+        \begin{align}
+            &\mathbf{Pr}[|CMS[j][h_j(i)]-f_j(t)| \ge \epsilon \cdot t] \notag \\
+            \leq &\sum_{i \in M, j \in N}\mathbf{Pr}[|CMS[j][h_j(i)]-f_j(t)| \ge \epsilon \cdot t] \notag \\
+            =&N \cdot M \cdot \frac{\delta}{N \cdot M} = \delta 
+        \end{align}
+
+        Thus, $ \mathbf{Pr}[|CMS[j][h_j(i)]-f_j(t)| \le \epsilon \cdot t] = 1-\delta$.
+
+        \item Compare the guarantee with the algorithm in lecture 3.
+        
+        \Answer
+        The resulting guarantees are weaker however the space efficiency is higher due to incorrect frequency estimates.
+
+        \item Discuss how to support \textsc{Deletion}$(i)$, which subtracts the frequency of $i$ by 1, and
+        \textsc{ListHeavy}, which output a list of at most $O(1/\epsilon)$ elements that contain all heavy elements $i$ with $f_i(t) \geq \epsilon \cdot t$ like the set $A$ in the Misra-Gries algorithm.
+
+        \Answer
+        \textsc{Deletion}(i): Decrease $|CMS[j][h_j(i)]|$ by 1 for each $j \in [\ell]$.
+        
+
+        \begin{algorithm}[ht]
+            \caption{ListHeavy}
+            \begin{algorithmic}[1]
+                \State Set $L= [ ]$.
+            \For {each hash $j \in [\ell]$}
+                \For {each $b \in [0, 1, ..., B-1]$}
+                    \If {$CMS[j][b] \ge 2 \cdot \epsilon \cdot t$}
+                        \State Insert $A[j][b]$ into $L$;
+                    \EndIf
+                \EndFor
+            \EndFor \\
+            \Return $L$
+            \end{algorithmic}
+            \end{algorithm}
+
+            Since the element $A[j][b]$ contribute the most (\ie , $\geq \frac{1}{2}$) in $CMS[j][b]$, its true frequency $f_i(t) \geq \frac{1}{2}\cdot 2 \cdot \epsilon \cdot t = \epsilon \cdot t$. Besides, list $L$ has at most $\frac{1}{\epsilon}$ elements, since $\frac{t}{f_i(t)}\leq \frac{1}{\epsilon}$.
+    \end{enumerate}
+\end{problem}
+
+\end{document}
