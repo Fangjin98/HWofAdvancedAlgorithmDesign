@@ -1,0 +1,139 @@
+\include{../header.tex}
+
+\begin{document}
+
+\noindent
+\hspace*{.2in} COMP7102P Fall 2022
+\hfill Homework 2\\
+\begin{CJK}{UTF8}{gbsn}
+    \hspace*{.2in} \textcolor{red}{BA22011024 \Name{} \ChineseName} \hfill due: Oct. 27, 09:30
+\end{CJK}
+\bigskip
+
+
+\begin{problem}[30 points] Answer the following questions and show your calculations.
+\begin{enumerate}
+  \item Compute the stationary distribution of the standard random walk (pick a random outgoing edge and traverse along this edge) for the following directed graph.
+ \begin{figure}[H]
+      \centering
+ \includegraphics[width=2in]{images/123.png}
+\end{figure}     
+   Remark: Unlike undirected graphs whose stationary distributions have a close form, there is no close form for directed graph.
+   
+  \Answer
+  The transition matrix $A$ of the following directed graph is 
+  \begin{equation}
+  A = {
+\left( \begin{array}{cccc}
+0 & \frac{1}{3} & \frac{1}{3} & \frac{1}{3}\\
+0 & 0 & 0 & 1\\
+0 & 0 & 0 & 1 \\
+1 & 0 & 0 & 0 
+\end{array}
+\right )}.
+  \end{equation}
+ Assume the stationary distribution is $\mathbf{\pi} = (\pi_1, \pi_2, \pi_3, \pi_4)$. We have $\mathbf{\pi}A = \mathbf{\pi}$, that is,
+\begin{align}\label{5}
+\begin{cases}
+\pi_4 = \pi_1\\
+ \frac{\pi_1}{3} = \pi_2\\
+  \frac{\pi_1}{3} = \pi_3\\
+  \frac{\pi_1}{3}+\pi_2+\pi_3 = \pi_4\\
+  \pi_1+ \pi_2+ \pi_3+ \pi_4 =1
+\end{cases}
+\end{align}
+ By solving Eq .\eqref{5}, we obtain,
+ \begin{align}
+\begin{cases}
+ \pi_1 = \frac{3}{8}\\
+ \pi_2 = \frac{1}{8}\\
+ \pi_3 = \frac{1}{8}\\
+ \pi_4 = \frac{3}{8}
+\end{cases},
+\end{align}
+the stationary distribution is $\mathbf{\pi} = (\frac{3}{8}, \frac{1}{8},\frac{1}{8}, \frac{3}{8})$.
+      
+  \item Consider a start graph with $n$ vertices. Suppose vertex 1 is the center. What are the hitting time $h_{1,2}$ and $h_{2,1}$?
+   \begin{figure}[H]
+      \centering
+ \includegraphics[width=4in]{images/1234.png}
+\end{figure} 
+  
+  \Answer
+  For the star graph, we have
+  \begin{align}\label{7}
+\begin{cases}
+h_{1,2} = \sum_{i=3}^{n}\frac{1+h_{i,2}}{n-1} + \frac{1}{n-1}\\
+h_{3,2} = 1+h_1,2\\
+\cdots\\
+h_{n,2} = 1+h_1,2\\
+\end{cases}
+\end{align}
+  By Eq. \eqref{7}, we derive
+  \begin{align}
+  &  h_{1,2} = (n-2)\frac{2+h_{1,2}}{n-1} + \frac{1}{n-1}\nonumber\\
+   \Longrightarrow &(n-1) h_{1,2} =  (n-2)(2+h_{1,2}) +1\nonumber\\
+   \Longrightarrow&  h_{1,2} = 2n-3  
+  \end{align}
+  Therefore, we have $h_{1,2} = 2n-3$. Apparently,  $h_{2,1} = 1$.
+  
+  \item Consider a path graph with from 1 to n. What are the hitting time $h_{1,n}$ and $h_{n,1}$?
+    \Answer
+    For the linear graph, we have
+  \begin{align}\label{10}
+\begin{cases}
+h_{1,n} = 1+h_{2,n} \\
+h_{2,n} =1+ \frac{1}{2}(h_{1,n}+h_{3,n})\\
+h_{3,n} =1+ \frac{1}{2}(h_{2,n}+h_{4,n})\\
+h_{4,n} =1+ \frac{1}{2}(h_{3,n}+h_{5,n})\\
+\cdots\\
+h_{n-2,n} =1+ \frac{1}{2}(h_{n-1,n}+h_{n-3,n})\\
+h_{n-1,n} =1+ \frac{1}{2}h_{n-2,n}.
+\end{cases}
+\end{align}
+  By adding the left and right sides of Eq. \eqref{10} respectively, we get
+  \begin{align}
+  &  h_{1,n}+h_{2,n}+h_{n-1,n} = n-1 + \frac{3}{2}h_{2,n} +\frac{1}{2}h_{1,n}+\frac{1}{2}h_{n-1,n} \nonumber\\
+   \Longrightarrow &h_{n-1,n} = 2n-3
+  \end{align}
+  By using $h_{n-1,n} = 2n-3$, we recursively solve Eq. \eqref{10} as follows,
+  \begin{align}\label{15}
+\begin{cases}
+h_{n-1,n} = 2n-3 \\
+h_{n-2,n} =4n-8\\
+h_{n-3,n} =6n-15\\
+\cdots\\
+h_{n-i,n} =2ni - i(i+2)\\
+\cdots\\
+h_{2,n} =n(n-2)\\
+h_{1,n} =n(n-2)+1.
+\end{cases}
+\end{align}
+As a result, we obtain that $h_{1,n} =n(n-2)+1$. Similarly, we can derive that $h_{n,1} =n(n-2)+1$, too.
+  
+  
+\end{enumerate}
+
+\end{problem}
+
+\begin{problem}[40 points] Let us compute the mixing time by a different way. Let $A$ be the transition matrix of a undirected graph $G: A(i, j) = 1/d(i) \text{\ iff\ }(i, j) \in E$. Let $A = \sum_{i=1}^{n}\lambda_i\cdot D^{-1/2}\mathop{v_{i}}\limits ^{\rightarrow}\cdot D^{-1/2}{\mathop{v_{i}}\limits ^{\rightarrow}}^\top$ be its eigen-decomposition where $\mathop{v_{1}}\limits ^{\rightarrow},\mathop{v_{2}}\limits ^{\rightarrow},...,\mathop{v_{n}}\limits ^{\rightarrow}$ constitute an orthonormal basis.
+\end{problem}
+\begin{enumerate}
+	\item Write all facts that we have shown about $\lambda_1,...,\lambda_n$ and $\mathop{u_{1}}\limits^{\rightarrow}$.
+	\item Let $p_0$ be the distribution of the starting point of our random walk. Prove $p_t^\top=p_0^\top\cdot A^t$ and $||p_t - \pi||_2 \le \max\{\lambda_2,|\lambda_n|\}\cdot||p_{t-1}-\pi||_2$.
+	\item Conclude that for $t\ge\frac{10\log{\frac{n}{\epsilon}}}{1-\max\{\lambda_2,|\lambda_n|\}}$,$||p_t-\pi||_1\le\epsilon$ (note that we switch to $\ell_1$ norm here).
+\end{enumerate}
+
+\begin{problem}[30 points] Consider the Boolean cube $B_n$ of dimension $n: V=\{0,1\}^n$ and $E=\{(x,y)\}$ where the difference between $x$ and $y$ is just 1 bit. See Figure 3 for $B_3$.
+\end{problem}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=2in]{images/p2.png}\\
+	Figure 3: Boolean cube of dimension 3
+\end{figure} 
+\begin{enumerate}
+	\item Compute the eigenvalues and eigenvectors of $B_n$.
+	\item Consider lazy random walk where we stay at the current vertex with probability .5 and move along an edge with probability .5. Bound the mixing time of lazy random walk in	$B_n$ by eigenvalues.
+	\item Argue that it takes $\Omega(n\log n)$ time to mix in expectation.
+\end{enumerate}
+\end{document}
