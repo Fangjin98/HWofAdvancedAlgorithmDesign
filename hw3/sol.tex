@@ -134,6 +134,54 @@ As a result, we obtain that $h_{1,n} =n(n-2)+1$. Similarly, we can derive that $
 \begin{enumerate}
 	\item Compute the eigenvalues and eigenvectors of $B_n$.
 	\item Consider lazy random walk where we stay at the current vertex with probability .5 and move along an edge with probability .5. Bound the mixing time of lazy random walk in	$B_n$ by eigenvalues.
-	\item Argue that it takes $\Omega(n\log n)$ time to mix in expectation.
+	
+  \Answer
+	Let $N$ be the transition matrix of random walk on the cube $B_n$. Then we know that: $N = 1 \cdot Q_n$. For the matrix $N$, denote its eigenvalues by $\eta$, we have: $\eta_i = \frac{1}{n} \cdot \lambda_i$. And we know that the stationary distribution of the random walk on the cube is just like that in the lecture, with $2^n$ vertices in the graph. So its stationary distribution
+  $\pi(j)=\frac{deg(j)}{|E|}= \frac{n}{n \cdot 2^n}=\frac{1}{2^n}$.
+
+  Now we consider the lazy random walk. Its transition matrix $A= \frac{1}{2} \cdot I + \frac{1}{2} \cdot N$, so its eigenvalues(denoted by $\mu$) $\mu_i = \frac{1}{2} + \frac{1}{2} \cdot \mu_i =\frac{1}{2} + \frac{1}{2 \cdot n}\lambda_i$, and its stationary distribution is the same with the ordinary random walk. From part 1 of this problem, we can see that $\lambda \in [-n, n]$, so we have:
+
+  \begin{equation}
+    1 = \mu_1 \geq \dots \geq \mu_{2^n} \geq 0
+  \end{equation}
+  
+  Denote the eigenvectors of $A$ by $v$. We have:
+
+  \begin{align}
+    v_1 &= (\sqrt{\frac{d_1}{2m}}, \dots, \sqrt{\frac{d_n}{2m}})^T \\
+    &=(\sqrt{\frac{1}{2^n}}, \dots, \sqrt{\frac{1}{2^n}})^T
+  \end{align}
+
+  Because $A$ is symmetric, we have:
+
+  \begin{align}
+    A = \sum\limits_{i=1}^{2^n} \mu_i \cdot \overrightarrow{v_i} \cdot \overrightarrow{v_i}^T
+  \end{align}
+
+  So we have:
+  
+  \begin{align}
+    p_t^T &= p_0^T \cdot A^t \\
+    &= p_0^T \cdot \sum\limits_{i=1}^{2^n} \mu_i^t \cdot \overrightarrow{v_i} \cdot \overrightarrow{v_i}^T
+  \end{align}
+
+  So 
+
+  \begin{align}
+    p_t(j) &= \sum\limits_{i=1}^{2^n} p_0(i) \cdot A^t(i,j) \\
+    &= \sum\limits_{i=1}^{2^n} p_0(i) \cdot [\pi(i)+ \sum\limits_{k=2}^{2^n}\mu_k^tv_k(i)v_k(j)] \\
+    &= \pi(j)+\sum_{i=1}^{2^n} p_0(i) \cdot [\sum\limits_{k=2}^{2^n}\mu_k^tv_k(i)v_k(j)]
+  \end{align}
+
+  We have:
+
+  \begin{align}
+    |p_t-\pi|_{1} &= \sum\limits_{j=1}^{2^n} |p_t(j) - \pi(j)| \\
+    &= \sum\limits_{i=1}^{2^n} |\sum\limits_{j=1}^{2^n} (p_0(i) \cdot \sum\limits_{k=2}^{2^n} \mu_k^tv_k(i)v_k(j) | \\
+    &\leq \sum\limits_{j=1}^{2^n} |2^n \cdot \max\limits_{k=2 \backsim 2^n} \mu_k^t \\
+    & \leq 2^{2n} \cdot |\mu_2^t
+  \end{align}
+
+  \item Argue that it takes $\Omega(n\log n)$ time to mix in expectation.
 \end{enumerate}
 \end{document}
