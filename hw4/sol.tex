@@ -6,9 +6,270 @@
 \hspace*{.2in} COMP7102P Fall 2022
 \hfill Homework 4\\
 \begin{CJK}{UTF8}{gbsn}
-    \hspace*{.2in} \textcolor{red}{BA22011024 \Name{} \ChineseName} \hfill due: Dec. 30, 23:59
+    \hspace*{.2in} \textcolor{red}{BA22011024 \Name{} \ChineseName} \hfill due: Dec. 30, 09:30 
 \end{CJK}
 \bigskip
 
+\begin{problem}
+  Suppose you're acting as a consultant for the Port Authority of a small Pacific Rim nation. They're currently doing a multi-billion-dollar business per-year, and their revenue is constrained almost entirely by the rate at which they can unload ships that arrive in the port. 
+  
+  Here's a basic sort of problem they face. A ship arrives, with $n$ containers of weight $w_1$, $w_2$,..., $w_n$. Standing on the dock is a set of trucks, each of which can hold $K$ units of weight. (You can assume that $K$ and each $w_1$ is an integer.) You can stack multiple containers in each truck, subject to the weight restriction of $K$; the goal is to minimize the number of trucks that are needed in order to carry all the containers. This problem is NP-complete (you don't have to prove this).
+  
+  A greedy algorithm you might use for this is the following. Start with an empty truck, and begin piling containers 1,2,3,... into it until you get to a container that would overflow the weight limit. Now declare this truck "loaded" and send it off; then continue the process with a fresh truck. This algorithm, by considering trucks one at a time, may not achieve the most effective way to pack the full set of containers into an available collection of trucks.
+  
+  \begin{enumerate}
+    \item Give an example of a set of weights, and a value of $K$, where this algorithm does not use the minimum possible number of trucks.
+    
+    \Answer Given a set of weights $\{w_1 = 2, w_2 = 5,w_3=2, w_4 =1\}$, and $K=5$. 
+    
+    The optimal solution costs 2 trucks. Truck 1 loads $w_2$ and truck 2 loads $w_1$, $w_3$ and $w_4$. 
+    
+    However, the greedy algorithm costs 3 trucks. Truck 1 loads $w_1$. Truck 2 loads $w_2$ and truck 3 loads $w_3$ and $w_4$.
+    
+    
+    \item Show, however, that the number of trucks used by this algorithm is within a factor of 2 of the minimum possible number, for any set of weights and any value of $K$.
+        
+    \Answer Supposing that this algorithm costs $M$ trucks to carry all the containers. The actual load of each truck $m \in \{1,...,M\}$ is denoted as $B_m$. We first prove that for any two trucks $m$ and $m+1$, if the load of the truck $m$ is smaller than $\frac{K}{2}$, the load of the truck $m+1$ must be larger than $\frac{K}{2}$.
+        
+    According to the algorithm, if $B_m \leq \frac{K}{2}$ and $B_{m+1}\leq \frac{K}{2}$, the algorithm will let truck $m$ carry all the containers. As a result, if $B_m \leq \frac{K}{2}$, $B_{m+1}$ must be larger than $\frac{K}{2}$, \ie, $B_m + B_{m+1} \geq K$.
+
+    If $n \mod 2 =0$, we have
+    
+    \begin{align}
+    \notag & \sum_{m=1}^{M} B_m \geq \frac{M \cdot K}{2} \\
+    \notag \Rightarrow & \lceil\frac{\sum_{m=1}^{M} B_m}{K}\rceil \geq \frac{M}{2}\\
+    \Rightarrow & \frac{M}{\lceil\frac{\sum_{m=1}^{M} B_m}{K}\rceil} \leq 2
+    \end{align}
+  
+    Since the optimal solution is greater than $\lceil\frac{\sum_{m=1}^{M} B_m}{K}\rceil$, we have the number of trucks used by this algorithm is within a factor of 2 of the minimum possible number.
+  
+    If $n \mod 2 =1$, we have 
+    
+    \begin{align}
+    \notag & \sum_{m=1}^{M} B_m \geq \frac{(M-1) K}{2} +B_M \\
+    \notag \Rightarrow & \frac{\sum_{m=1}^{M} B_m}{K} \geq \frac{M-1}{2} +\frac{B_M}{K}\\
+    \notag \Rightarrow & \lceil\frac{\sum_{m=1}^{M} B_m}{K}\rceil \geq \lceil\frac{M-1}{2} +\frac{B_M}{K}\rceil= \frac{M+1}{2} \\
+    \Rightarrow & \frac{M}{\lceil\frac{\sum_{m=1}^{M} B_m}{K}\rceil} \leq \frac{M+1}{\lceil\frac{\sum_{m=1}^{M} B_m}{K}\rceil} \leq 2
+    \end{align}
+
+    To conclude that the number of trucks used by this algorithm is within a factor of 2 of the minimum possible number.
+  \end{enumerate} 
+\end{problem}
+  
+\begin{problem}
+  Suppose you are given a set of positive integers $A=\{a_1,a_2,...,a_n\}$ and a positive integer $B$. A subset $S\subseteq A$ is called \emph{feasible} if the sum of the numbers in $S$ does not exceed $B$:
+  \begin{equation}
+  \sum_{a_i\in S}a_i \leq B
+  \end{equation}
+  The sum of the numbers in $S$ will be called the total sum of $ S$.
+  
+  You would like to select a feasible subset $S$ of $A$ whose total sum is as large as possible.
+  
+  \textbf{Example.} If $A=\{8,2,4\}$ and $B=11$, then the optimal solution is the subset $S=\{8,2\}$.
+  \begin{enumerate}
+  
+  \item Here is an algorithm for this problem.
+  
+  \begin{algorithm} [H]
+  \caption{}
+          \begin{algorithmic}
+               \State Initialize $S=\varnothing$
+               \State Define T=0
+               \For {$i=1,2,...,n$}
+                    \If  {$T+a_i\leq B$}
+                       \State  $S\leftarrow S\bigcup\{a_i\}$;
+                       \State $T\leftarrow T+a_i$;
+                    \EndIf
+               \EndFor
+          \end{algorithmic}
+  \end{algorithm}
+  
+  Given an instance in which the total sum of the set $S$ returned by this algorithm is less than half the total sum of some other feasible subset of $A$.
+  
+  \Answer 
+  Given $A=\{1,6,9\}$ and $B=15$. The optimal solution is $S=\{6,9\}$ with the sum of 15. Algorithm 1 obtains $S=\{1,6\}$ with the sum of 7, which is less than half of 15.
+  
+  \item Give a polynomial-time approximation algorithm for this problem with the following guarantee: It returns a feasible set $S\subseteq A$ whose total sum is at least half as large as the maximum total sum of any feasible set $S'\subseteq A$. Your algorithm should have a running time of at most $O(n\log n)$.
+   
+  \Answer   
+  \begin{algorithm}[H]
+  \caption{}
+  \begin{small}
+          \begin{algorithmic}[1]
+          \State Sort $A$ in a non-increasing order by quick sort 
+               \State Initialize $S=\varnothing$
+               \State Define T=0
+               \For {$i=1,2,...,n$}
+                    \If  {$T+a_i\leq B$}
+                       \State  $S\leftarrow S\bigcup\{a_i\}$; 
+                       \State $T\leftarrow T+a_i$; 
+                    \EndIf
+               \EndFor
+          \end{algorithmic}
+  \end{small}
+  \end{algorithm}
+  
+  The time complexity of Algorithm 2 is determined by Line 1, and the time complexity of quick sort is $O(n\log n)$. Therefore the time complexity of Algorithm 2 is $O(n\log n)$. 
+  
+  Now we prove the correctness of Algorithm 2 by contradiction. We define the optimal solution as $S^*$, and the result returned by Algorithm 2 as $S$. Supposing that the sum of $S$ is less than half the sum of $S^*$.
+
+  \begin{equation}\label{eq:4}
+    \sum_{a_i\in S}{a_i}<\frac{1}{2}\sum_{a_i\in S^*}a_i<\frac{1}{2}B
+  \end{equation}
+  
+  If $a\in S^*$ and $a \notin S$, we can obtain $\sum_{a_i\in S}{a_i}+a>B$. Combining Eq. \eqref{eq:4} we derive that:
+  
+  \begin{equation}
+  \frac{B}{2}<a<B
+  \end{equation}
+  
+  Since we sort all elements in $A$ in a non-increasing value.
+  \begin{equation}
+  a>a_i, \forall a_i\in{S}
+  \end{equation}
+  
+  That is, $a$ should be already added into $S$ before any other value $a_i\in S$ by using Algorithm 2, leading to $S>\frac{B}{2}$.
+  
+  \end{enumerate}
+  \end{problem}
+  
+  \begin{problem}
+    Recall that in the basic Load Balancing Problem from Section 11.1, we're interested in placing jobs on machines sa as to minimize the \emph{makespan}-the maximum load on any one machine. In a number of applications, it is natural to consider cases in which you have access to machines with different amounts of processing power, so that a given job may complete more quickly on one of your machines than on another. The question then becomes: How should you allocate jobs to machines in these more heterogeneous systems?
+    
+    Here's a basic model that exposed these issues. Suppose you have a system that consists of $m$ slow machines and $k$ fast machines. The fast machines can perform twice as much work per unit time as the slow machines. Now you're given a set of $n$ jobs; job $i$ takes time $t_i$ to process on a slow machine and time $\frac{1}{2}t_i$ to process on a fast machine. You want to assign each job to a machine; as before, the goal is to minimize the makespan-that is the maximum, over all machines, of the total processing time of jobs assigned to that machine.
+    
+    Given a polynomial-time algorithm that produces an assignment of jobs to machines with a makespan that is at most three times the optimum.
+    
+    \Answer
+    \begin{algorithm}[H]
+      \caption{Sorted-Balance}\label{alg1}
+      \begin{small}
+        \begin{algorithmic}[1]
+          \State Start with no jobs assigned
+          \State Set $T_i = 0$ and $A(i)=\varnothing$ for all machines $M_i$
+          \State Sort jobs in decreasing order of processing times $t_j$
+          \State Assume that $ t_1\geq t_2 >\geq \cdots \geq t_n$
+          \For {jobs $j=1,2,...,n$} \label{alg2:lin5}
+          \State Let $M_i$ be the machine that achieves the minimum $\min_k T_k$
+          \State Assign job $j$ to machine $M_i$
+          \State Set $A_{I}\leftarrow A_{i}\cup{j}$
+          \State $T_i\leftarrow T_i +t_j$
+          \EndFor
+        \end{algorithmic}
+      \end{small}
+    \end{algorithm}
+    
+    Specifically, this solution sorts jobs in running time ($t_i$) decreasing order, and sequentially put each job on the machine with the shortest running time (minimum load). We then prove this algorithm produces an assignment of jobs to machines with a makespan that is at most three times the optimum.
+    
+    Consider that all machines are the slow machines. Firstly, since we assign each job to the machine with the minimum load, we have
+    
+    \begin{equation}
+      T_i-t_j\leq \frac{1}{m}\sum_{k}T_k
+    \end{equation}
+    
+    where $T_i$ is the workload of machine $M_i$ after assigning job $j$ to it, $t_j$ is the running time of job $j$ and $\frac{1}{m}\sum_{k}T_k$ is the average workload among all machines. Consider that the optimal value $T^*$ is always equal to $\frac{1}{m}\sum_{k}T_k$, we have
+    
+    \begin{equation}
+      T_i-t_j\leq T^*
+    \end{equation}
+    
+    If the number of jobs is smaller than the number of machines, the solution of the greedy algorithm is the optimal, \ie, each machine carries at most one job. 
+    
+    If the number of jobs is larger than the number of machines, we have
+    
+    \begin{equation}
+      t_j \leq \frac{1}{2}T^*.
+    \end{equation}
+    
+    The reason is that $t_j$ is smaller than the running time of previous tasks that assigned to machine $M_j$. As a result, we have
+
+    \begin{equation}
+      T_i\leq \frac{3}{2}T^*.
+    \end{equation}
+    
+    The above discussion assumes that all machines are slow. In fact, there exists some fast machines, which are two times faster than the slow machines, \ie, for the actual optimal value $T_{actual}^*$, we have
+    \begin{equation}
+      \frac{1}{2}T^* \leq T_{actual}^*\leq T^*
+    \end{equation}
+
+    Based on the above discussion, we can derive that
+    
+    \begin{equation}
+      T_i\leq \frac{3}{2}T^*\leq 3T_{actual}^*
+    \end{equation}
+    
+    To summarize, this algorithm produces an assignment of jobs to machines with a makespan that is at most three times the optimal.
+  \end{problem}
+  
+  \begin{problem}
+    Recall that in the Knapsack Problem, we have $n$ items, each with a weight $w_i$ and a value $v_i$. We also have a weight bound $W$, and the problem is to select a set of items $S$ of highest possible value subject to the condition that the total weight does not exceed $W$-that is, $\sum_{i\in{S}}w_i\leq W$. Here's one way to look at the approximation algorithm that we designed in this chapter. If we are told there exists a subset $\mathcal{O}$ whose total weight is $\sum_{i\in{\mathcal{O}}}w_i\leq W$ and whose total value is $\sum_{i\in{\mathcal{O}}}v_i= V$ for some $V$, then our approximation algorithm can find a set $\mathcal{A}$ with total weight $\sum_{i\in{\mathcal{A}}}w_i\leq W$ and total value at least $\sum_{i\in{\mathcal{A}}}v_i\geq V/(1+\epsilon)$. Thus the algorithm approximates the best value, while keeping the weights strictly under $W$. (Of course, returning the set $\mathcal{O}$ is always a valid solution, but since the problem is NP-hard, we don't expect to always be able to find $\mathcal{O}$ itself; the approximation bound of $1+\epsilon$ means that other sets $\mathcal{A}$, with slightly less value, can be valid answers as well.)
+    
+    Now, as is well known, you can always pack a little bit more of a trip just by "sitting on your suitcase"-in other words, by slightly overflowing the allowed weight limit. This too suggests a way of formalizing the approximation question for the Knapsack Problem, but it's the following, different, formalization.
+    
+    Suppose, as before, that you're given $n$ items with weights and values, as well as parameters $W$ and $V$; and you're told that there is a subset $\mathcal{O}$ whose total weight is $\sum_{i\in\mathcal{O}}w_i\leq W$ and whose total value is $\sum_{i\in\mathcal{O}}v_i=V$ for some $V$. For a given fixed $\epsilon>0$, design a polynomial-time algorithm that finds a subset of items $\mathcal{A}$ such that $\sum_{i\in\mathcal{A}}w_i\leq(1+\epsilon)W$ and $\sum_{i\in\mathcal{A}}v_i\geq V$. In other words, you want $\mathcal{A}$ to achieve at least as high a total value as the given bound $V$, but you're allowed to exceed the weight limit $W$ by a factor $1+\epsilon$.
+    
+    \textbf{Example.} Suppose you're given four items, with weights and values as follows:
+    \begin{equation}\nonumber
+      (w_1,v_1) = (5,3), (w_2, v_2) = (4,6)
+    \end{equation}
+    \begin{equation}\nonumber
+      (w_3,v_3) = (1,4), (w_4, v_4) = (6,11)
+    \end{equation}
+    You're also given $W=10$ and $V=13$ (since, indeed, the subset consisting of the first three items has total weight at most 10 and has value 13). Finally, your're given $\epsilon=0.1$. This means you need to find (via your approximation algorithm) a subset of weight at most $(1+0.1)*10 = 11$ and value at least 13. One valid solution would be the subset consisting of the first and fourth items, with value $14\geq13$. (Note that this is a case where you're able to achieve a value strictly greater than $V$, since you're allowed to slightly overfill the knapsack.)
+    
+    \Answer
+    Suppose that $w_i\leq W$ for each item $i$. We can round up the weight value of each item, and then perform the dynamic programming algorithm to obtain the optimal solution. Specifically, let $\theta = \frac{\epsilon W}{n}$
+    and $\hat{w_i} = \lfloor\frac{w_i}{\theta}\rfloor\theta$, where $\hat{w_i}\leq w_i$. Since the weight will decrease, the optimal solutions $V$ will not exceed the optimal solutions $\hat{V}$, \ie,
+    
+    \begin{equation}
+      V\leq \hat{V}=\sum_{i\in\mathcal{A}}v_i
+    \end{equation}
+    
+    The optimal solution can be directly obtained by applying the dynamic programming algorithm. Firstly, we have
+    
+    \begin{equation}
+      \hat{w_i}\leq w_i\leq \hat{w_i}+\theta,
+    \end{equation}
+    
+    Secondly, for the optimal solution to problem with $\hat{w_i}$, we have
+    
+    \begin{equation}
+      \sum_{i\in\mathcal{A}}\hat{w_i}\leq W
+    \end{equation}
+    
+    According to the above two inequaities, we derive that
+    
+    \begin{align}
+      & \notag \sum_{i\in\mathcal{A}}w_i\leq\sum_{i\in\mathcal{A}}(\hat{w_i}+\theta)\\
+      \Rightarrow & \sum_{i\in\mathcal{A}}w_i\leq W+ n\theta = (1+\epsilon)W
+    \end{align}
+  \end{problem}
+
+  The detailed process of this algorithm is concluded as following.
+  
+  \begin{algorithm}[H]
+    \caption{Knapsack}
+    \begin{small}
+      \begin{algorithmic}[1]
+        \State Set $\theta = \frac{\epsilon W}{n}$
+        \For {item $i\in\{1,...,n\}$}
+        \State $\hat{w_i} = \lfloor\frac{w_i}{\theta}\rfloor\theta$
+        \EndFor
+        \State Array M[0,...,n][0,...,V]
+        \For {item $i\in\{1,...,n\}$}
+        \State $M[i,0] = 0$
+        \EndFor
+        \For {item $i\in\{1,...,n\}$}
+        \For{value $V \in {1,...,\sum_{j=1}^{i}v_j}$}
+        \If {$V>\sum_{j=1}^{i-1}v_j$}
+        \State $M[i,V] = \hat{w_i}+M[i-1,V-v_i]$
+        \Else
+        \State $M[i,V] = \min\{M[i-1,V], \hat{w_i}+M[i-1,\max\{0,V-v_i\}]\}$
+        \EndIf
+        \EndFor
+        \EndFor
+      \end{algorithmic}
+    \end{small}
+  \end{algorithm}
 
 \end{document}
